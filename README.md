@@ -129,7 +129,7 @@ The current UI simulates role selection for demonstration. It does not authentic
 
 | Item | Status | Scope of the status |
 |---|---|---|
-| Landing page | **Implemented** | Single-screen light Sudharshan introduction: a minimal utility header, a viewport-wide glowing tube that spills light downward at rest, an oversized wordmark, an uppercase technical tagline, a short product description, one Get Started action into the existing prototype role selection and a prototype status line. Cursor proximity adds local illumination on top; nothing informative depends on it. |
+| Landing page | **Implemented** | Single-page public landing in `src/landing.tsx` and `src/landing.css`: a compact sticky header with the five section links (What We Build, Our Method, Who We Are, Thinking, Contact) and scroll-spy state, a dark cinematic hero (lit tube, teal wash, Sudharshan wordmark, product headline, the record-path stage and one Get Started action into the existing prototype role selection), five editorial sections below it and a site footer. Section anchors, the header action and the hero action all lead into or through the existing prototype; nothing on the page claims live data or a contact channel. |
 | Login interface | **Implemented as UI only** | Form and guest entry are present. Submitting the form routes to prototype role selection; credentials are not checked. |
 | Guest prototype access | **Implemented** | Guest link opens the role-selection interface without creating an authenticated session. |
 | Role selection | **Implemented** | AICTE, College Official and Candidate / Student cards navigate to their UI simulations. |
@@ -166,9 +166,9 @@ The routes for role screens should not be read as evidence that the underlying w
 | Frontend | React 19 and React DOM, written in TypeScript and built with Vite 6. |
 | Routing | React Router DOM 7. |
 | UI icons | Lucide React. |
-| Fonts | Locally bundled Public Sans and IBM Plex Mono through Fontsource packages. |
+| Fonts | Locally bundled Public Sans and IBM Plex Mono through Fontsource packages, plus Instrument Serif for the landing page's display headings. |
 | Package manager | pnpm, pinned in `package.json` as `pnpm@11.25.0`, with a committed lockfile. |
-| Styling | A single hand-written global stylesheet at `src/styles.css` using CSS custom properties. Tailwind, a component library, CSS-in-JS and any additional UI framework are not used. |
+| Styling | Hand-written CSS using custom properties: the global design system in `src/styles.css`, the landing page in `src/landing.css`, and the small upstream stylesheets that ship with the React Bits components. Tailwind, a component library, CSS-in-JS and any additional UI framework are not used. |
 | Deployment | Static Vite build, currently served at `https://sudharshan-mauve.vercel.app`. No deployment configuration is committed in this repository; see [Local Development](#21-local-development). |
 
 ### Intended future architecture
@@ -188,9 +188,9 @@ The frontend must never contain privileged service-role credentials, AI provider
 
 The registry is licensed. Without a valid key every request returns HTTP 401 Unauthorized, so `npx shadcn@latest add @reactbits-starter/neon-reveal-tw` cannot run until the key is configured in the environment. The `-tw` variants also assume a shadcn/Tailwind setup, which this project deliberately does not use because the design system is hand-written CSS; the `-css` variants are the matching choice if Tailwind is not introduced.
 
-The hero's two React Bits pieces are a separate matter: **`TechText` (the wordmark) and `WebThreads` (the woven background light) are the open-source JavaScript + CSS variants, integrated in `src/react-bits/`**, so no licence key is involved for either. Each `.jsx` and `.css` is kept byte-faithful to the upstream source so an update from reactbits.dev is a straight copy; each `.d.ts` is a local shim that exists only because the app compiles with `strict` and `allowJs` is off — TypeScript resolves the import there while Vite resolves the `.jsx`. `WebThreads` is themed to the app rather than the library default: `lightMode` draws crisp ink strokes on the ivory background, and its thread gradient is the same evergreen-teal → aqua → cyan → soft blue arc as the tube wash.
+The landing page's two React Bits pieces are a separate matter: **`TechText` (the hero wordmark) and `WebThreads` (the woven light behind Our Method) are the open-source JavaScript + CSS variants, integrated in `src/react-bits/`**, so no licence key is involved for either. Each `.jsx` and `.css` is kept byte-faithful to the upstream source so an update from reactbits.dev is a straight copy; each `.d.ts` is a local shim that exists only because the app compiles with `strict` and `allowJs` is off — TypeScript resolves the import there while Vite resolves the `.jsx`. `WebThreads` is themed to the page rather than the library default: it runs in its dark glow mode over the method section, at low opacity, with the same teal → cyan → blue arc as the hero wash.
 
-The hero markup stays agnostic to which component draws the word: the pointer-proximity controller in `src/pages.tsx` writes `--glow`, and the accent layers that read it — the tube wash and the ambient bloom — live in `src/styles.css`. The wordmark's own outline reveal, selection frame, specks and click kick are the component's business, not the page's.
+The landing markup stays agnostic to which component draws the word. Its own motion lives in `src/landing.tsx` (one passive scroll listener for the hero's parallax offset, one `IntersectionObserver` for reveals, one for the header's active section) and the layers it drives live in `src/landing.css`. The wordmark's outline reveal, selection frame, specks and click kick remain the component's business.
 
 ## 8. High-Level Architecture
 
@@ -318,7 +318,7 @@ The intended visual character is institutional, modern, credible, information-or
 
 Avoid purple AI gradients, neon as a general design language, excessive glassmorphism, giant gradient typography, pill-shaped buttons, excessive rounded cards, generic SaaS templates, fake testimonials/reviews/statistics, fake partner or institutional logos, emoji-based UI, unnecessary animations, Y2K aesthetics and AI-slop imagery. Do not invent government logos or imply affiliation.
 
-The one deliberate exception is the landing hero: a warm-white editorial surface with a viewport-wide tube that spills a restrained teal wash down from the top at rest, while cursor proximity raises a tighter aura behind the wordmark, implemented in `src/pages.tsx` and `src/styles.css`. It is additive only. The wordmark stays near-black solid type, the page is complete with the effect off, reduced motion and coarse pointers get a fixed low glow with no listener, and nothing informative depends on the animation.
+The landing page is the one deliberate exception, and it is scoped to its own module (`src/landing.tsx`, `src/landing.css`) so none of it leaks into the role interfaces. It uses the same ink, paper and teal tokens but in an editorial composition: a dark cinematic hero with a lit tube and a slowly breathing teal wash behind the wordmark, then alternating light and dark sections in Instrument Serif and IBM Plex Mono. Motion is a one-shot scroll reveal, a slow opacity breath on the wash and three pulses on the hero bus. Nothing informative depends on any of it: content is fully readable with animation off, `prefers-reduced-motion` removes the breath, pulses and parallax, and there is no cursor-following effect anywhere on the page.
 
 Use semantic HTML, meaningful labels, keyboard-operable controls, visible focus and status descriptions that do not rely on color alone. The mobile role-navigation drawer includes focus handling. These are implementation choices, not a claim of WCAG conformance or a completed accessibility audit. UI copy should avoid em dashes.
 
@@ -431,6 +431,8 @@ Completing a roadmap item requires implementing and verifying its real behavior;
 │   │   └── api.ts
 │   ├── app.tsx
 │   ├── components.tsx
+│   ├── landing.css
+│   ├── landing.tsx
 │   ├── layout.tsx
 │   ├── main.tsx
 │   ├── pages.tsx
@@ -458,13 +460,15 @@ Responsibilities in the current frontend:
 - `src/app.tsx` defines public routes, role route groups and the not-found route.
 - `src/layout.tsx` provides the reusable role shell, sidebar, top bar and responsive navigation.
 - `src/react-bits/TechText.jsx` is React Bits' canvas wordmark renderer for the landing hero, with its own stylesheet and a `.d.ts` shim for the strict compiler.
-- `src/react-bits/WebThreads.jsx` is React Bits' WebGL2 woven-light background for the same hero, likewise with its own stylesheet and `.d.ts` shim; it degrades to nothing if WebGL2 is unavailable.
+- `src/react-bits/WebThreads.jsx` is React Bits' WebGL2 woven-light background behind the landing page's method section, likewise with its own stylesheet and `.d.ts` shim; it degrades to nothing if WebGL2 is unavailable.
+- `src/landing.tsx` is the public landing page: sticky header and scroll-spy, hero, the five narrative sections, contact block and site footer.
+- `src/landing.css` is the landing page's stylesheet, deliberately separate from the role interfaces.
 - `src/pages.tsx` contains public pages, role dashboards and placeholder views.
 - `src/components.tsx` contains shared visual and form components.
 - `src/data/demo.ts` contains role navigation, route descriptions and synthetic demonstration fixtures.
 - `src/services/api.ts` defines a future API boundary only; it makes no requests.
 - `src/types.ts` contains shared TypeScript interfaces and unions.
-- `src/styles.css` contains the design tokens and responsive styling.
+- `src/styles.css` contains the shared design tokens and the styling for public pages and role interfaces.
 - `public/manus-routes.json` declares the website page routes.
 - `docs/PROJECT_AUDIT.md` contains the deeper technical audit: route inventory, data flow, security, accessibility, responsive and performance findings, technical debt and the recommended phase order.
 

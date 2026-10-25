@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState, type FormEvent, type ReactNode } from 'react';
+import { useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
@@ -33,8 +33,6 @@ import {
   StatusBadge,
 } from './components';
 import { demoActivity, demoRecords, roleDetails, routeInfo } from './data/demo';
-import TechText from './react-bits/TechText';
-import WebThreads from './react-bits/WebThreads';
 import type { DemoRecord, Role } from './types';
 
 const publicNav = [
@@ -60,151 +58,6 @@ function PublicHeader() {
 
 function PublicPageFrame({ children }: { children: ReactNode }) {
   return <div className="public-site"><PublicHeader />{children}</div>;
-}
-
-// Cursor-proximity intensity for the light around the wordmark: distance to
-// the TechText container maps to a 0-1 value that is eased towards and written
-// to --glow, which lifts the tube wash and the ambient bloom. The wordmark's
-// own reveal, frame, specks and kick belong to React Bits' TechText and need
-// none of this. Coarse pointers get a fixed value, reduced motion a fixed low
-// one; neither installs a listener. Nothing here is required to read the page.
-function useNeonProximity(ref: { current: HTMLElement | null }) {
-  useEffect(() => {
-    const hero = ref.current;
-    const target = hero?.querySelector<HTMLElement>('.tech-text');
-    if (!hero || !target) return;
-
-    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)');
-    const statics: Array<[string, string]> = reducedMotion.matches
-      ? [['--glow', '0.16']]
-      : finePointer.matches
-        ? []
-        : [['--glow', '0.3']];
-
-    if (statics.length) {
-      for (const [property, value] of statics) hero.style.setProperty(property, value);
-      return () => {
-        for (const [property] of statics) hero.style.removeProperty(property);
-      };
-    }
-
-    const NEAR = 64;
-    const FAR = 320;
-    let frame = 0;
-    let glow = 0;
-    let targetGlow = 0;
-
-    const render = () => {
-      frame = 0;
-      glow += (targetGlow - glow) * 0.085;
-      hero.style.setProperty('--glow', glow.toFixed(3));
-      if (Math.abs(targetGlow - glow) > 0.002) {
-        frame = requestAnimationFrame(render);
-      }
-    };
-    const schedule = () => {
-      if (!frame) frame = requestAnimationFrame(render);
-    };
-
-    const handleMove = (event: PointerEvent) => {
-      const rect = target.getBoundingClientRect();
-      if (!rect.width || !rect.height) return;
-      const offsetX = Math.max(rect.left - event.clientX, 0, event.clientX - rect.right);
-      const offsetY = Math.max(rect.top - event.clientY, 0, event.clientY - rect.bottom);
-      const ramp = 1 - Math.min(Math.max((Math.hypot(offsetX, offsetY) - NEAR) / (FAR - NEAR), 0), 1);
-      targetGlow = ramp * ramp * (3 - 2 * ramp);
-      schedule();
-    };
-    const handleLeave = () => {
-      targetGlow = 0;
-      schedule();
-    };
-
-    window.addEventListener('pointermove', handleMove, { passive: true });
-    document.addEventListener('pointerleave', handleLeave);
-    return () => {
-      window.removeEventListener('pointermove', handleMove);
-      document.removeEventListener('pointerleave', handleLeave);
-      if (frame) cancelAnimationFrame(frame);
-      for (const property of ['--glow']) hero.style.removeProperty(property);
-    };
-  }, [ref]);
-}
-
-export function LandingPage() {
-  const heroRef = useRef<HTMLElement>(null);
-  useNeonProximity(heroRef);
-
-  return (
-    <main className="landing" ref={heroRef}>
-      <div className="landing__atmosphere" aria-hidden="true">
-        <div className="landing__bloom" />
-        <span className="landing__guide landing__guide--left" />
-        <span className="landing__guide landing__guide--right" />
-      </div>
-      <div className="landing__utility">
-        <span className="landing__utility-brand">Sudharshan</span>
-        <nav className="landing__utility-links" aria-label="Portal shortcuts">
-          <Link to="/prototype/access">Institution portal</Link>
-          <span aria-hidden="true">·</span>
-          <Link to="/prototype/access">Student portal</Link>
-        </nav>
-        <div className="landing__utility-actions">
-          <Link className="landing__utility-cta" to="/prototype/access">Get started</Link>
-        </div>
-      </div>
-      <div className="landing__rule" aria-hidden="true" />
-      {/* Woven light behind the copy. Light mode draws crisp ink strokes on the
-          ivory rather than glowing light, and the palette is the app's own
-          reveal arc (evergreen-teal -> aqua -> cyan -> soft blue) instead of the
-          library's purple/pink default. The weave pinches below the CTA and
-          fans to the edges, where `fade` melts it into the page. */}
-      <div className="landing__threads" aria-hidden="true">
-        <WebThreads
-          colors={['#0d8f83', '#00c8b4', '#2ebecd', '#5cb0e6']}
-          coreColor="#0d8f83"
-          backgroundColor="transparent"
-          lightMode
-          threadCount={7}
-          speed={0.16}
-          frequency={4.5}
-          spread={0.13}
-          position={0.24}
-          pinch={0.5}
-          glow={0.018}
-          thickness={1.15}
-          opacity={0.9}
-          fade={0.3}
-          grain={0.02}
-          intro
-          mouseInteraction
-          mouseStrength={0.45}
-          pulseOnClick
-        />
-      </div>
-      <div className="landing__grain" aria-hidden="true" />
-      <div className="landing__content">
-        <h1 className="landing__title">
-          <TechText
-            text="Sudharshan"
-            fontWeight={700}
-            fontSize={200}
-            align="center"
-            accentColor="#0d8f83"
-            reveal="letter"
-            specks={14}
-            clickKick
-            guides={false}
-          />
-        </h1>
-        <p className="landing__tagline">APAAR-based student data management &amp; verification</p>
-        <p className="landing__copy">A platform for institutions to submit, validate and verify student data, giving AICTE clearer, auditable visibility into enrolment.</p>
-        <Link className="landing__cta" to="/prototype/access">Get Started <ArrowRight size={14} strokeWidth={1.7} aria-hidden="true" /></Link>
-        <p className="landing__status">Prototype environment · SIH26263</p>
-      </div>
-    </main>
-  );
 }
 
 export function AboutPage() {

@@ -3,7 +3,6 @@ import { AppShell } from './layout';
 import {
   AboutPage,
   ContactPage,
-  LandingPage,
   LegalPage,
   LoginPage,
   NotFoundPage,
@@ -11,11 +10,15 @@ import {
   RolePage,
   SecurityPage,
 } from './pages';
+import { LandingPage } from './landing';
 import { PublicFooter } from './components';
 import type { Role } from './types';
 
+// The landing page carries its own footer, so the shared one is only added to
+// the secondary public pages.
 function PublicLayout() {
-  return <><Outlet /><PublicFooter /></>;
+  const { pathname } = useLocation();
+  return <><Outlet />{pathname !== '/' && <PublicFooter />}</>;
 }
 
 function RoutedRole({ role }: { role: Role }) {

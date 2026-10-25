@@ -1,7 +1,7 @@
 # TODO
 
 ## 1. Public information architecture and landing page — Complete
-- Create the public landing page at `/` with header links Platform, About, Security and Login, with Login as the primary CTA.
+- Create the public landing page at `/` with header links What We Build, Our Method, Who We Are, Thinking and Contact, plus a compact Get started action into the prototype entry flow. The current page is a dark cinematic hero followed by those five sections and a footer; About, Security, Login and the legal routes remain reachable from the footer and the prototype flow.
 - Use the heading “APAAR-based Student Data Management & Verification Platform”. Explain that the platform helps institutions submit student records, enables student confirmation, and provides AICTE with a structured way to monitor, validate and verify enrolment data. Do not claim live APAAR integration.
 - Explain the high-level ecosystem Institution → Student → AICTE → Authorized Verifier and the role of each participant.
 - Include three concise pillars: Validation (structured student data, rule-based checks, anomaly/duplicate detection later); Transparency (student confirmation, activity history, visibility into status of submitted information); Verification (consent-based verification, signed credentials/QR verification later, controlled information exposure). Do not claim features are operational if they are not implemented.

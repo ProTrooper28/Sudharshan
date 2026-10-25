@@ -2,9 +2,9 @@ import { useId, type FormEvent, type ReactNode } from 'react';
 import { ArrowDown, ArrowLeft, ArrowRight, Check, ChevronRight, CircleAlert, Info, X } from 'lucide-react';
 import type { ActivityItem, DataTableColumn } from './types';
 
-export function Brand({ compact = false }: { compact?: boolean }) {
+export function Brand({ compact = false, tone }: { compact?: boolean; tone?: 'inverse' }) {
   return (
-    <span className={`brand-lockup${compact ? ' brand-lockup--compact' : ''}`}>
+    <span className={`brand-lockup${compact ? ' brand-lockup--compact' : ''}${tone === 'inverse' ? ' brand-lockup--inverse' : ''}`}>
       <svg className="brand-mark" viewBox="0 0 40 40" aria-hidden="true">
         <rect x="1" y="1" width="38" height="38" rx="5" fill="currentColor" />
         <path d="M10 12h20M10 19h15M10 26h10" fill="none" stroke="#f7f8f4" strokeWidth="2.4" strokeLinecap="square" />

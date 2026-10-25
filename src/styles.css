@@ -80,6 +80,10 @@ code, .micro-label, .eyebrow, .section-kicker, .pillar__index, .principle-list__
 .brand-lockup--compact .brand-mark { width: 30px; height: 30px; }
 .brand-lockup--compact .brand-wordmark strong { font-size: .75rem; }
 .brand-lockup--compact .brand-wordmark > span { font-size: .49rem; }
+.brand-lockup--inverse { color: #f4f2e6; }
+.brand-lockup--inverse .brand-mark rect { fill: #f4f2e6; }
+.brand-lockup--inverse .brand-mark path:first-of-type { stroke: #081915; }
+.brand-lockup--inverse .brand-mark path:last-of-type { stroke: #12a190; }
 
 .public-site { min-height: 100vh; background: var(--paper); }
 .public-header { position: sticky; z-index: 20; top: 0; border-bottom: 1px solid rgba(220, 226, 223, .92); background: rgba(255, 255, 255, .97); }
@@ -657,94 +661,10 @@ body { color: var(--ink); background: var(--canvas); }
   .data-table th { font-size: .57rem; letter-spacing: .02em; }
 }
 
-/* --- Sudharshan landing: light editorial hero ---------------------------
-   The wordmark is React Bits' canvas TechText (src/react-bits), which draws
-   its own outline reveal, selection frame and specks. Everything around it
-   lives here: a pointer controller in src/pages.tsx writes --glow (0-1), and
-   the accent layers read it — the wash under the top tube and the ambient
-   bloom. Nothing animates on its own, so the page is complete with the
-   effect off, and coarse pointers and reduced motion get a fixed state
-   instead. */
-body:has(.landing) { background: #fbfaf6; }
-.landing { position: relative; display: grid; min-height: 100vh; min-height: 100svh; place-items: center; overflow: hidden; isolation: isolate; color: #101c19; --neon: #0d8f83; --glow: 0; background: radial-gradient(118% 74% at 50% -12%, #ffffff 0%, #fcfbf6 40%, #f3f1e6 100%); }
-.landing__atmosphere { position: absolute; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-.landing__bloom { position: absolute; top: 52%; left: 50%; width: min(104vw, 1240px); aspect-ratio: 2.4 / 1; transform: translate(-50%, -50%); opacity: calc(var(--glow, 0) * .85); background: radial-gradient(closest-side, rgba(0, 206, 180, .26), rgba(46, 190, 205, .1) 46%, rgba(46, 190, 205, 0) 74%); }
-/* Two architectural guides, not a grid: 64px outside the content column on
-   wide screens, pinned to the gutters on narrow ones, and almost invisible. */
-.landing__guide { position: absolute; top: 0; bottom: 0; width: 1px; background: linear-gradient(180deg, rgba(13, 26, 23, .06) 0%, rgba(13, 26, 23, .1) 38%, rgba(13, 26, 23, .05) 72%, rgba(13, 26, 23, 0) 96%); }
-.landing__guide--left { left: max(20px, calc(50% - 604px)); }
-.landing__guide--right { right: max(20px, calc(50% - 604px)); }
-/* Registration tick where each guide crosses the light line. */
-.landing__guide::after { position: absolute; top: calc(clamp(44px, 6vh, 56px) + 1px); left: -6px; width: 13px; height: 1px; content: ''; background: rgba(13, 26, 23, .2); }
-/* Interface header, not a navbar: identity left, portals right, mono caps. */
-/* Interface header in three parts: identity, portals, action. The two flanks
-   are flex:1 so the portal row sits dead centre regardless of its width. */
-.landing__utility { position: absolute; z-index: 3; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 18px; padding: clamp(13px, 2.2vh, 19px) clamp(20px, 3vw, 36px) 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .6rem; letter-spacing: .19em; line-height: 1.4; text-transform: uppercase; color: #5f6d67; }
-.landing__utility-brand { flex: 1 1 0; font-weight: 500; color: #2c3a35; }
-.landing__utility-actions { display: flex; flex: 1 1 0; justify-content: flex-end; }
-.landing__utility-cta { padding: 7px 14px 6px; border: 1px solid rgba(13, 26, 23, .72); border-radius: 2px; color: #16241f; font-weight: 500; letter-spacing: .16em; transition: border-color .2s ease, background-color .2s ease, color .2s ease; }
-.landing__utility-cta:hover { border-color: #0d8f83; background: rgba(13, 143, 131, .1); color: #0a4f48; }
-.landing__utility-cta:focus-visible { outline: 2px solid #0d8f83; outline-offset: 3px; }
-.landing__utility-links { display: inline-flex; flex: 0 0 auto; align-items: baseline; gap: 9px; white-space: nowrap; }
-.landing__utility-links a { transition: color .2s ease; }
-.landing__utility-links a:hover { color: #0b746a; }
-.landing__utility-links a:focus-visible { outline: 1px solid #0d8f83; outline-offset: 4px; }
-.landing__utility-links > span { color: #a3aeaa; }
-.landing__content { position: relative; z-index: 2; display: flex; width: min(calc(100% - 44px), 1080px); flex-direction: column; align-items: center; padding-block: clamp(120px, 23vh, 205px) clamp(34px, 5vh, 52px); text-align: center; }
-/* The tube is pinned to the top of the viewport and lit at rest: the line
-   plus the wash beneath it are the resting state of the page, exactly as
-   composed. Pointer proximity only lifts the wash and lights the aura behind
-   the word. Coarse pointers and reduced motion read a fixed value instead, so
-   nothing here depends on an effect being active. */
-.landing__rule { position: absolute; z-index: 1; top: clamp(44px, 6vh, 56px); left: 50%; width: min(94vw, 1500px); height: 2px; transform: translateX(-50%); background: linear-gradient(90deg, rgba(0, 200, 190, 0) 0%, rgba(0, 200, 190, .68) 6%, #00c8b4 50%, rgba(0, 200, 190, .68) 94%, rgba(0, 200, 190, 0) 100%); box-shadow: 0 0 10px rgba(0, 214, 190, .55), 0 0 30px rgba(46, 190, 205, .38); }
-/* The wash is a four-layer mesh, not a single tint: a hot core pinned to the
-   line, a centred bloom that arcs teal -> cyan -> soft blue, and two offset
-   blooms (left aqua, right blue) so the field is deliberately asymmetric.
-   Every stop is a bright high-chroma hue rather than the dark accent at partial
-   alpha, which is what makes a gradient read as designed instead of muddy. */
-.landing__rule::after { position: absolute; top: 0; left: -50vw; right: -50vw; height: min(74vh, 780px); content: ''; pointer-events: none; opacity: calc(.84 + var(--glow, 0) * .16); filter: blur(24px); background: linear-gradient(180deg, rgba(0, 214, 190, .46) 0, rgba(0, 214, 190, 0) 165px), radial-gradient(58% 96% at 50% -3%, rgba(0, 206, 180, .55) 0%, rgba(46, 190, 205, .4) 26%, rgba(92, 176, 230, .24) 54%, rgba(126, 186, 244, .09) 78%, rgba(126, 186, 244, 0) 100%), radial-gradient(86% 48% at 36% -6%, rgba(0, 198, 172, .3) 0%, rgba(46, 190, 205, .12) 48%, rgba(46, 190, 205, 0) 84%), radial-gradient(74% 42% at 68% -8%, rgba(96, 172, 236, .24) 0%, rgba(96, 172, 236, .09) 44%, rgba(96, 172, 236, 0) 80%); }
-/* Fine noise over the wash only: large smooth fields band without it, and the
-   texture is what stops a gradient from looking machine-generated. */
-.landing__grain { position: absolute; z-index: 1; top: clamp(44px, 6vh, 56px); left: 0; right: 0; height: min(74vh, 780px); pointer-events: none; opacity: .05; mix-blend-mode: overlay; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23g)'/%3E%3C/svg%3E"); background-size: 160px 160px; }
-/* Woven light layer for React Bits' WebThreads. It sits after the wash and
-   before the grain (equal z-index, so DOM order decides): the strands read
-   crisp over the wash, keep the film grain over them, and always stay under
-   the copy at z-index 2. pointer-events: none because the canvas tracks the
-   cursor on window, so the layer never needs to be hit-testable. */
-.landing__threads { position: absolute; z-index: 1; inset: 0; pointer-events: none; }
-/* A soft teal halo plus a short neutral lift: the word reads as lit paper
-   rather than flat ink, without ever competing with the glyph fill. */
-.landing__title { width: 100%; height: clamp(104px, 18vw, 200px); margin: 0; color: #0d1a17; font-weight: 700; filter: drop-shadow(0 0 16px rgba(13, 143, 131, .2)) drop-shadow(0 16px 26px rgba(13, 40, 36, .16)); }
-.landing__tagline { margin: clamp(18px, 3vh, 26px) 0 0; color: #3f4f49; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: clamp(.62rem, .78vw, .72rem); font-weight: 500; letter-spacing: .2em; line-height: 1.7; text-transform: uppercase; }
-.landing__copy { max-width: 54ch; margin: 12px 0 0; color: #4d5a54; font-size: clamp(.9rem, 1vw, .98rem); line-height: 1.72; text-wrap: balance; }
-.landing__cta { display: inline-flex; min-height: 48px; align-items: center; gap: 12px; margin-top: clamp(26px, 4vh, 36px); padding: 0 24px; border: 1px solid #0d1a17; border-radius: 2px; color: #fbfaf6; background: #0d1a17; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .74rem; font-weight: 500; letter-spacing: .16em; text-transform: uppercase; transition: background-color .2s ease, border-color .2s ease; }
-.landing__cta:hover { border-color: #12312c; background: #12312c; }
-.landing__cta svg { opacity: .8; }
-.landing__cta:focus-visible { outline: 2px solid #0d8f83; outline-offset: 3px; }
-
-.landing__status { margin: clamp(16px, 2.6vh, 24px) 0 0; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .57rem; letter-spacing: .2em; text-transform: uppercase; color: #5c6a64; }
-
-/* The wordmark itself is React Bits' canvas-based TechText, imported from
-   src/react-bits/TechText.jsx with its own stylesheet. This file only sizes
-   the box it draws into (above) and keeps every light layer around it. No
-   letter, outline or speck styling belongs here any more. */
-
 @media (max-width: 850px) {
   .public-nav { gap: 17px; }
 }
 @media (max-width: 620px) {
-  .landing__content { width: calc(100% - 32px); padding-block: clamp(104px, 18vh, 150px) clamp(30px, 4.5vh, 44px); }
-  .landing__rule { width: 100%; }
-  .landing__utility { gap: 12px; padding-inline: 16px; font-size: .55rem; letter-spacing: .14em; }
-  .landing__utility-links { display: none; }
-  .landing__tagline { letter-spacing: .13em; }
-  .landing__copy { max-width: 40ch; }
-  .landing__title { height: clamp(80px, 21vw, 116px); }
   .sidebar-brand .brand-wordmark strong { font-size: .82rem; }
   .sidebar-brand .brand-wordmark > span { display: none; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  /* TechText reads this query itself and drops its sweep, intro and kicks. */
-  .landing__cta svg { transition: none; }
 }
