@@ -173,6 +173,9 @@ export function FormField({
   name,
   autoComplete,
   required = false,
+  value,
+  onChange,
+  placeholder,
 }: {
   label: string;
   hint?: string;
@@ -181,6 +184,9 @@ export function FormField({
   name: string;
   autoComplete?: string;
   required?: boolean;
+  value?: string;
+  onChange?: (event: import('react').ChangeEvent<HTMLInputElement>) => void;
+  placeholder?: string;
 }) {
   const id = useId();
   const hintId = `${id}-hint`;
@@ -188,20 +194,51 @@ export function FormField({
   return (
     <div className="form-field">
       <label htmlFor={id}>{label}{required && <span aria-hidden="true"> <span className="required-marker">*</span></span>}</label>
-      <input id={id} name={name} type={type} autoComplete={autoComplete} required={required} aria-invalid={Boolean(error)} aria-describedby={[hint && hintId, error && errorId].filter(Boolean).join(' ') || undefined} />
+      <input
+        id={id}
+        name={name}
+        type={type}
+        autoComplete={autoComplete}
+        required={required}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        aria-invalid={Boolean(error)}
+        aria-describedby={[hint && hintId, error && errorId].filter(Boolean).join(' ') || undefined}
+      />
       {hint && <p id={hintId} className="form-field__hint">{hint}</p>}
       {error && <p id={errorId} className="form-field__error" role="alert">{error}</p>}
     </div>
   );
 }
 
-export function SelectField({ label, name, options, defaultValue }: { label: string; name: string; options: Array<{ label: string; value: string }>; defaultValue?: string }) {
+export function SelectField({
+  label,
+  name,
+  options,
+  defaultValue,
+  value,
+  onChange,
+}: {
+  label: string;
+  name: string;
+  options: Array<{ label: string; value: string }>;
+  defaultValue?: string;
+  value?: string;
+  onChange?: (event: import('react').ChangeEvent<HTMLSelectElement>) => void;
+}) {
   const id = useId();
   return (
     <div className="form-field">
       <label htmlFor={id}>{label}</label>
       <div className="select-wrap">
-        <select id={id} name={name} defaultValue={defaultValue ?? options[0]?.value}>
+        <select
+          id={id}
+          name={name}
+          defaultValue={value !== undefined ? undefined : (defaultValue ?? options[0]?.value)}
+          value={value}
+          onChange={onChange}
+        >
           {options.map((option) => <option key={option.value} value={option.value}>{option.label}</option>)}
         </select>
         <ChevronRight size={16} aria-hidden="true" />

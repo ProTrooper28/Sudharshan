@@ -35,3 +35,41 @@ export type DataTableColumn = {
   label: string;
   render?: (row: Record<string, ReactNode>) => ReactNode;
 };
+
+export type StudentValidationStatus = 'Clean' | 'Warning' | 'Error' | 'Pending';
+
+export type StudentConfirmationStatus = 'Confirmed' | 'Pending' | 'Disputed';
+
+export type CollegeStudent = {
+  id: string;
+  apaarId: string;
+  name: string;
+  programme: string;
+  programmeCode: string;
+  academicYear: string;
+  quota: 'State Quota' | 'All India' | 'Management' | 'NRI';
+  validationStatus: StudentValidationStatus;
+  confirmationStatus: StudentConfirmationStatus;
+  flags?: string[];
+  batchId?: string;
+  enrolledDate: string;
+};
+
+export type SeatAllocation = {
+  programme: string;
+  code: string;
+  approvedIntake: number;
+  enrolled: number;
+  vacant: number;
+};
+
+export type CollegeDashboardMetrics = {
+  totalSeats: number;
+  totalEnrolled: number;
+  totalClean: number;
+  totalFlagged: number;
+  totalConfirmed: number;
+  totalPendingConfirmation: number;
+  totalBatches: number;
+};
+

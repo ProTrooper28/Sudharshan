@@ -656,3 +656,204 @@ body { color: var(--ink); background: var(--canvas); }
   .stat-card__top { font-size: .58rem; }
   .data-table th { font-size: .57rem; letter-spacing: .02em; }
 }
+
+/* College Dashboard Foundation Enhancements */
+.quick-action-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  margin-top: 14px;
+}
+.quick-action-card {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  transition: border-color .15s ease, background-color .15s ease;
+}
+.quick-action-card:hover {
+  border-color: var(--accent);
+  background: #f8faf8;
+}
+.quick-action-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+.quick-action-card__top svg {
+  color: var(--accent);
+}
+.quick-action-card strong {
+  font-size: .81rem;
+  font-weight: 600;
+  color: var(--ink);
+}
+.quick-action-card span {
+  font-size: .7rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+.seat-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 140px;
+}
+.seat-bar {
+  flex: 1;
+  height: 6px;
+  background: #e6eae6;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.seat-bar__fill {
+  height: 100%;
+  background: var(--accent);
+}
+.seat-bar__fill--full {
+  background: var(--sand);
+}
+.seat-bar__text {
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .65rem;
+  color: var(--muted);
+  min-width: 38px;
+  text-align: right;
+}
+@media (max-width: 620px) {
+  .quick-action-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.form-card {
+  max-width: 820px;
+  padding: 24px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+}
+.form-grid-two {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.form-actions-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 22px;
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+@media (max-width: 640px) {
+  .form-grid-two {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Phase 3: Bulk Upload Styling */
+.upload-dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 40px 24px;
+  border: 2px dashed var(--line-strong);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  text-align: center;
+  transition: border-color .15s ease, background-color .15s ease;
+  cursor: pointer;
+}
+.upload-dropzone:hover, .upload-dropzone--dragover {
+  border-color: var(--accent);
+  background: #f6faf7;
+}
+.upload-dropzone__icon {
+  display: grid;
+  width: 48px;
+  height: 48px;
+  place-items: center;
+  border-radius: 50%;
+  color: var(--accent);
+  background: #eaf3ee;
+}
+.upload-dropzone h3 {
+  margin: 0;
+  font-size: .95rem;
+  font-weight: 600;
+}
+.upload-dropzone p {
+  max-width: 420px;
+  margin: 0;
+  color: var(--muted);
+  font-size: .76rem;
+}
+.upload-stepper {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 20px;
+  padding: 10px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  background: var(--paper);
+  overflow-x: auto;
+}
+.upload-step {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: .74rem;
+  color: var(--muted);
+  white-space: nowrap;
+}
+.upload-step--active {
+  color: var(--accent);
+  font-weight: 600;
+}
+.upload-step--complete {
+  color: #2e6f4f;
+}
+.upload-step__index {
+  display: grid;
+  width: 20px;
+  height: 20px;
+  place-items: center;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  font-family: 'IBM Plex Mono', monospace;
+  font-size: .62rem;
+}
+.mapping-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin-block: 16px;
+}
+@media (max-width: 768px) {
+  .mapping-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.validation-badge-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.row-error-tag {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 2px;
+  font-size: .63rem;
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid #f3d4ce;
+}
