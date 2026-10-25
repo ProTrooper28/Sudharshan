@@ -10,7 +10,7 @@ export function Brand({ compact = false }: { compact?: boolean }) {
         <path d="M10 12h20M10 19h15M10 26h10" fill="none" stroke="#f7f8f4" strokeWidth="2.4" strokeLinecap="square" />
         <path d="M29 17v13" fill="none" stroke="#c9a56a" strokeWidth="2.4" strokeLinecap="square" />
       </svg>
-      <span className="brand-wordmark"><strong>APAAR</strong><span>RECORD</span></span>
+      <span className="brand-wordmark"><strong>SUDHARSHAN</strong><span>APAAR RECORDS</span></span>
     </span>
   );
 }
@@ -275,7 +275,7 @@ export function PublicFooter() {
   return (
     <footer className="public-footer">
       <div className="public-footer__inner"><Brand compact /><p>Prototype interface for the SIH26263 concept. No production access is connected.</p>
-        <nav aria-label="Footer"><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cookies">Cookie Policy</a><a href="/contact">Contact</a><a href="/login">Login</a></nav>
+        <nav aria-label="Footer"><a href="/about">About</a><a href="/security">Security</a><a href="/privacy">Privacy Policy</a><a href="/terms">Terms &amp; Conditions</a><a href="/cookies">Cookie Policy</a><a href="/contact">Contact</a><a href="/login">Login</a></nav>
       </div>
     </footer>
   );

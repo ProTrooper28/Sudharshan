@@ -129,7 +129,7 @@ The current UI simulates role selection for demonstration. It does not authentic
 
 | Item | Status | Scope of the status |
 |---|---|---|
-| Landing page | **Implemented** | Public concept page with workflow, participant, design-intent and prototype-boundary content. |
+| Landing page | **Implemented** | Single-screen light Sudharshan introduction: a minimal utility header, a viewport-wide glowing tube that spills light downward at rest, an oversized wordmark, an uppercase technical tagline, a short product description, one Get Started action into the existing prototype role selection and a prototype status line. Cursor proximity adds local illumination on top; nothing informative depends on it. |
 | Login interface | **Implemented as UI only** | Form and guest entry are present. Submitting the form routes to prototype role selection; credentials are not checked. |
 | Guest prototype access | **Implemented** | Guest link opens the role-selection interface without creating an authenticated session. |
 | Role selection | **Implemented** | AICTE, College Official and Candidate / Student cards navigate to their UI simulations. |
@@ -139,6 +139,8 @@ The current UI simulates role selection for demonstration. It does not authentic
 | Shared component system | **Implemented for the prototype** | Shared navigation, notices, tables, status badges, forms, timelines and other presentation components are in the React source. |
 | Responsive layouts | **Implemented as a UI baseline** | Responsive styling and mobile navigation are present. This is not a formal accessibility or device-compatibility certification. |
 | Legal page placeholders | **Implemented as draft UI** | Privacy, terms and cookie routes contain prototype/draft content; they are not reviewed legal policies. |
+
+Several shared components exist in the source but are not referenced by any route: `FilterBar`, `Pagination`, `ConfirmationDialog` and `AuditTimeline`. `Modal` is only reachable through `ConfirmationDialog`, so the dialog pattern is not currently rendered anywhere. These are scaffolding for future screens, not working capability.
 
 ### Backend and product workflows
 
@@ -166,6 +168,8 @@ The routes for role screens should not be read as evidence that the underlying w
 | UI icons | Lucide React. |
 | Fonts | Locally bundled Public Sans and IBM Plex Mono through Fontsource packages. |
 | Package manager | pnpm, pinned in `package.json` as `pnpm@11.25.0`, with a committed lockfile. |
+| Styling | A single hand-written global stylesheet at `src/styles.css` using CSS custom properties. Tailwind, a component library, CSS-in-JS and any additional UI framework are not used. |
+| Deployment | Static Vite build, currently served at `https://sudharshan-mauve.vercel.app`. No deployment configuration is committed in this repository; see [Local Development](#21-local-development). |
 
 ### Intended future architecture
 
@@ -177,6 +181,16 @@ The routes for role screens should not be read as evidence that the underlying w
 | AI and external APIs | Called by backend services | Planned; no provider integration is connected. |
 
 The frontend must never contain privileged service-role credentials, AI provider keys or external integration secrets.
+
+### React Bits Pro status
+
+`components.json` registers the React Bits Pro registries (`@reactbits-starter` and `@reactbits-pro`) with an `Authorization` header read from `REACTBITS_LICENSE_KEY`. The key belongs in the environment, never in source, and it is not a browser variable: do not prefix it with `VITE_`.
+
+The registry is licensed. Without a valid key every request returns HTTP 401 Unauthorized, so `npx shadcn@latest add @reactbits-starter/neon-reveal-tw` cannot run until the key is configured in the environment. The `-tw` variants also assume a shadcn/Tailwind setup, which this project deliberately does not use because the design system is hand-written CSS; the `-css` variants are the matching choice if Tailwind is not introduced.
+
+The hero's two React Bits pieces are a separate matter: **`TechText` (the wordmark) and `WebThreads` (the woven background light) are the open-source JavaScript + CSS variants, integrated in `src/react-bits/`**, so no licence key is involved for either. Each `.jsx` and `.css` is kept byte-faithful to the upstream source so an update from reactbits.dev is a straight copy; each `.d.ts` is a local shim that exists only because the app compiles with `strict` and `allowJs` is off — TypeScript resolves the import there while Vite resolves the `.jsx`. `WebThreads` is themed to the app rather than the library default: `lightMode` draws crisp ink strokes on the ivory background, and its thread gradient is the same evergreen-teal → aqua → cyan → soft blue arc as the tube wash.
+
+The hero markup stays agnostic to which component draws the word: the pointer-proximity controller in `src/pages.tsx` writes `--glow`, and the accent layers that read it — the tube wash and the ambient bloom — live in `src/styles.css`. The wordmark's own outline reveal, selection frame, specks and click kick are the component's business, not the page's.
 
 ## 8. High-Level Architecture
 
@@ -194,7 +208,7 @@ Synthetic fixtures in src/data/demo.ts
 No backend, database, APAAR service or external API is called.
 ```
 
-`src/services/api.ts` defines a future same-origin `/api` service boundary and TypeScript request/response types. It deliberately makes no network or database requests.
+`src/services/api.ts` defines a future same-origin `/api` service boundary and TypeScript request/response types. It deliberately makes no network or database requests, and no component imports it yet; pages read the synthetic fixtures directly.
 
 ### Intended future system
 
@@ -302,7 +316,9 @@ The repository’s `.gitignore` excludes `.env` and `.env.*` files while allowin
 
 The intended visual character is institutional, modern, credible, information-oriented, accessible and restrained. The current interface uses warm paper surfaces, evergreen accents, compact navigation, indexed section details, thin rules, professional tables and Public Sans / IBM Plex Mono typography. Reuse the established components and design tokens when extending the UI.
 
-Avoid purple AI gradients, neon, excessive glassmorphism, giant gradient typography, pill-shaped buttons, excessive rounded cards, generic SaaS templates, fake testimonials/reviews/statistics, fake partner or institutional logos, emoji-based UI, unnecessary animations, Y2K aesthetics and AI-slop imagery. Do not invent government logos or imply affiliation.
+Avoid purple AI gradients, neon as a general design language, excessive glassmorphism, giant gradient typography, pill-shaped buttons, excessive rounded cards, generic SaaS templates, fake testimonials/reviews/statistics, fake partner or institutional logos, emoji-based UI, unnecessary animations, Y2K aesthetics and AI-slop imagery. Do not invent government logos or imply affiliation.
+
+The one deliberate exception is the landing hero: a warm-white editorial surface with a viewport-wide tube that spills a restrained teal wash down from the top at rest, while cursor proximity raises a tighter aura behind the wordmark, implemented in `src/pages.tsx` and `src/styles.css`. It is additive only. The wordmark stays near-black solid type, the page is complete with the effect off, reduced motion and coarse pointers get a fixed low glow with no listener, and nothing informative depends on the animation.
 
 Use semantic HTML, meaningful labels, keyboard-operable controls, visible focus and status descriptions that do not rely on color alone. The mobile role-navigation drawer includes focus handling. These are implementation choices, not a claim of WCAG conformance or a completed accessibility audit. UI copy should avoid em dashes.
 
@@ -404,6 +420,13 @@ Completing a roadmap item requires implementing and verifying its real behavior;
 ├── src/
 │   ├── data/
 │   │   └── demo.ts
+│   ├── react-bits/
+│   │   ├── TechText.css
+│   │   ├── TechText.d.ts
+│   │   ├── TechText.jsx
+│   │   ├── WebThreads.css
+│   │   ├── WebThreads.d.ts
+│   │   └── WebThreads.jsx
 │   ├── services/
 │   │   └── api.ts
 │   ├── app.tsx
@@ -413,10 +436,13 @@ Completing a roadmap item requires implementing and verifying its real behavior;
 │   ├── pages.tsx
 │   ├── styles.css
 │   └── types.ts
+├── docs/
+│   └── PROJECT_AUDIT.md
 ├── .gitignore
 ├── README.md
 ├── TODO.md
 ├── app.config.ts
+├── components.json
 ├── index.html
 ├── package.json
 ├── pnpm-lock.yaml
@@ -431,6 +457,8 @@ Responsibilities in the current frontend:
 
 - `src/app.tsx` defines public routes, role route groups and the not-found route.
 - `src/layout.tsx` provides the reusable role shell, sidebar, top bar and responsive navigation.
+- `src/react-bits/TechText.jsx` is React Bits' canvas wordmark renderer for the landing hero, with its own stylesheet and a `.d.ts` shim for the strict compiler.
+- `src/react-bits/WebThreads.jsx` is React Bits' WebGL2 woven-light background for the same hero, likewise with its own stylesheet and `.d.ts` shim; it degrades to nothing if WebGL2 is unavailable.
 - `src/pages.tsx` contains public pages, role dashboards and placeholder views.
 - `src/components.tsx` contains shared visual and form components.
 - `src/data/demo.ts` contains role navigation, route descriptions and synthetic demonstration fixtures.
@@ -438,8 +466,9 @@ Responsibilities in the current frontend:
 - `src/types.ts` contains shared TypeScript interfaces and unions.
 - `src/styles.css` contains the design tokens and responsive styling.
 - `public/manus-routes.json` declares the website page routes.
+- `docs/PROJECT_AUDIT.md` contains the deeper technical audit: route inventory, data flow, security, accessibility, responsive and performance findings, technical debt and the recommended phase order.
 
-There are currently no `backend/`, `ml/` or `docs/` directories. A future separation into backend and ML services may be designed when those layers are approved; do not create duplicate or speculative structures before then.
+There are currently no `backend/`, `server/`, `api/`, `ml/`, `supabase/`, `tests/` or `.github/` directories. A future separation into backend and ML services may be designed when those layers are approved; do not create duplicate or speculative structures before then.
 
 ## 21. Local Development
 
@@ -465,9 +494,15 @@ pnpm preview
 
 `pnpm run build` runs the TypeScript project build and creates the Vite production bundle in `dist/`. `pnpm preview` serves that built frontend locally. The repository currently has no backend or ML service commands; do not invent commands for services that are not present.
 
+### Deployment
+
+The project is a static Vite single-page application. A public deployment is served at `https://sudharshan-mauve.vercel.app`.
+
+The repository does **not** contain deployment configuration (`vercel.json`, a CI workflow or rewrite rules), so the actual production settings are not versioned here. Because the application uses `BrowserRouter`, the host must rewrite unknown paths to `/index.html`; without that rewrite, deep links and refreshes fail. As audited on 25 October 2026, the deployed site serves `/` normally but returns HTTP 404 for `/college/students`, `/prototype/access` and `/student`. Treat that as a deployment defect to fix before relying on shared links or refreshes, and add the rewrite configuration to the repository so it stays reproducible.
+
 ## 22. Environment Variables
 
-The current frontend does not declare application environment-variable names and the repository has no `.env.example`. No backend credentials are required to run the present UI.
+The current frontend declares no application environment variables and needs none to run: the UI requires no backend credentials. Tooling configured in `components.json` reads one build-time variable, `REACTBITS_LICENSE_KEY`, for the licensed React Bits Pro registry. Supply it through the environment (for example `.env.local`, which is git-ignored), never through source code or a `VITE_`-prefixed name.
 
 Future environment configuration may need categories for client-safe public settings and backend-only database access, privileged Supabase credentials, AI providers and external APIs. Exact variable names should be chosen and documented when those services are implemented; this README does not introduce names that are not already part of the codebase.
 
@@ -483,7 +518,7 @@ The existing verification command is:
 pnpm run build
 ```
 
-It runs the TypeScript build and Vite production build. It is a compile/build check, not a substitute for behavioral tests or an accessibility, security or responsive audit.
+It runs the TypeScript build and Vite production build. It is a compile/build check, not a substitute for behavioral tests or an accessibility, security or responsive audit. No CI workflow runs it automatically; there is no lint or separate typecheck script, and no test script.
 
 Future testing should cover:
 
@@ -516,6 +551,11 @@ The current repository does **not** implement mock OTP, a mock APAAR service, mo
 - QR/credential pages are placeholders and do not issue or verify credentials.
 - Legal, privacy and security content is draft/intended-principle material and has not had formal review.
 - Automated verification is limited to the configured TypeScript/Vite build; a product test suite is not present.
+- The deployed site returns HTTP 404 on direct loads of deep links, because no SPA rewrite is versioned in the repository.
+- The student shell has no sidebar link to `/student`; that overview is reachable only through the role picker, the breadcrumb or direct navigation.
+- On `/college/students/add`, two sidebar items highlight at once because the active-link test also matches parent paths.
+- Route changes do not reset scroll position. Landing-page hash targets scroll explicitly, but a client-side route change otherwise keeps the previous scroll offset.
+- Several small muted metadata colours fall below WCAG AA contrast at their rendered size, and no formal accessibility audit, device testing or assistive-technology testing has been performed.
 
 ## 26. Contribution and Change Process
 
@@ -534,6 +574,8 @@ For each future change:
 ## 27. Documentation Maintenance
 
 This README is the master project reference for humans and future coding agents. Keep it synchronized with the repository when a significant feature, route, service, architecture decision or implementation status changes. Update the current structure from the actual tree, and separate implemented behavior from future intent.
+
+`docs/PROJECT_AUDIT.md` holds the deeper technical baseline: route inventory, component and data-flow audit, security, accessibility, responsive and performance findings, technical debt and the recommended phase order. Keep it aligned with the code when those areas change, and re-verify it rather than assuming an older audit is still accurate.
 
 Before adding a new dependency, service, data model or integration, verify that it is necessary and approved. Do not use documentation changes to imply that a feature has been built.
 
