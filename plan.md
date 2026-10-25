@@ -22,17 +22,19 @@ The public landing page explains the institution → student → AICTE → autho
 
 Implement reusable `AppShell`, `Sidebar`, `TopBar`, `Breadcrumbs`, `PageHeader`, `SectionHeader`, `StatCard`, `DataTable`, `StatusBadge`, `EmptyState`, `Alert/Notice`, `Modal`, `ConfirmationDialog`, `FormField`, `Select`, `Tabs`, `SearchBar`, `FilterBar`, `Pagination`, `ActivityTimeline`, `AuditTimeline`, QR placeholder, `Footer`, and responsive mobile navigation. Keep controls clearly disabled or routed to a phase-two explanation when their operations do not exist; do not imply server-side results.
 
-Organize the code as follows:
+Organize the implemented code as follows:
 
-- `src/app/`: router, application bootstrap and route metadata.
-- `src/components/layout/`: shared shells, sidebars, top bars, breadcrumb and footer.
-- `src/components/ui/`: reusable accessible controls, tables, statuses, timelines and notices.
-- `src/features/public/`, `src/features/aicte/`, `src/features/college/`, `src/features/student/`: page components grouped by audience.
-- `src/data/demo/`: clearly synthetic fixtures, separate from UI and services.
-- `src/services/`: typed future API boundary and non-network demo adapter; no database queries in components.
-- `src/types/`: shared record, navigation and status types.
-- `src/styles/`: design tokens, global styles and responsive rules.
-- `public/manus-routes.json`: complete source-synchronized page route manifest.
+- `src/main.tsx`: Vite/React entry point, app mount, locally bundled fonts and global styles.
+- `src/app.tsx`: React Router route declarations, role-shell routing and the not-found route.
+- `src/pages.tsx`: public pages, prototype login and role access, all three role dashboards, illustrative record views and intentional placeholders.
+- `src/layout.tsx`: reusable `AppShell`, `Sidebar`, `TopBar` and `Breadcrumbs`, including responsive drawer behavior.
+- `src/components.tsx`: reusable brand, notices, fields, tables, statuses, search/filter controls, modal/dialog helpers, timelines and QR placeholder.
+- `src/data/demo.ts`: route metadata, role navigation, synthetic records and sample activity, separate from the UI and API boundary.
+- `src/services/api.ts`: typed future service boundary with no network requests or database operations.
+- `src/types.ts`: shared role, navigation, route, demo-record and activity types.
+- `src/styles.css`: design tokens, global styles, public and dashboard layouts, responsive breakpoints and focus/motion behavior.
+- `public/apaar-mark.svg` and `public/manus-routes.json`: the site mark and complete page-route manifest.
+- Project root: `package.json`, `pnpm-lock.yaml`, `pnpm-workspace.yaml`, Vite/TypeScript configuration, `index.html`, `app.config.ts`, this plan and the acceptance `TODO.md`.
 
 ## Design direction
 
