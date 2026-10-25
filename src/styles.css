@@ -570,3 +570,89 @@ code, .micro-label, .eyebrow, .section-kicker, .pillar__index, .principle-list__
 @media (max-width: 850px) {
   .sidebar-close { display: inline-grid; margin-left: auto; }
 }
+
+
+/* APAAR registry identity: paper, evergreen ink, and indexed record rules. */
+:root {
+  color: #192b27;
+  background: #fbfaf6;
+  --ink: #192b27;
+  --muted: #626f69;
+  --muted-2: #818b83;
+  --accent: #155448;
+  --accent-dark: #103f37;
+  --accent-soft: #e5ede5;
+  --paper: #fffefa;
+  --canvas: #f1f0e9;
+  --line: #deddd3;
+  --line-strong: #c8c8bb;
+  --sand: #b68b49;
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --shadow-1: 0 2px 5px rgba(32, 43, 36, .045), 0 10px 26px rgba(32, 43, 36, .035);
+}
+
+body { color: var(--ink); background: var(--canvas); }
+::selection { color: #173c34; background: #dce8d9; }
+.public-header { border-top: 3px solid var(--accent); background: rgba(255, 254, 250, .98); }
+.hero-section { background: #f2f0e7; }
+.hero-copy { padding-left: 20px; border-left: 2px solid var(--accent); }
+.hero-copy h1 { max-width: 650px; }
+.hero-register { border-top: 2px solid var(--sand); border-radius: 3px; box-shadow: 0 10px 28px rgba(28, 50, 40, .07); }
+.hero-register__header { background: #f8f6ee; }
+.participant-strip { background: #f7f6f0; }
+.content-section { padding-block: 78px; }
+.pillar__index { color: var(--accent); }
+.pillar__icon { border-color: #d6d8ca; border-radius: 3px; background: #f6f4eb; }
+.future-label { border-color: #deddd3; color: #56645d; background: #f8f7f1; }
+.workflow-band { border-color: #deddd3; background: #efeee5; }
+.workflow-band__heading h2 { letter-spacing: -.025em; }
+.closing-band { background: #153f38; }
+
+.app-frame { background: var(--canvas); }
+.app-sidebar { border-right-color: #d8d7cc; background: #f8f7f0; }
+.sidebar-section-label { color: #7c857c; }
+.sidebar-link { border-radius: 2px; }
+.sidebar-link--active { color: #123f37; background: #e5ece3; }
+.sidebar-link--active:hover { background: #dfe9df; }
+.sidebar-link__active-mark { width: 3px; border-radius: 0; }
+.topbar { background: rgba(255, 254, 250, .97); }
+.app-footer { color: #6b756e; background: #f8f7f0; }
+.page-header h1 { letter-spacing: -.035em; }
+
+.stats-grid { gap: 0; border: 1px solid var(--line-strong); background: var(--paper); }
+.stat-card { padding: 16px 17px 15px; border: 0; border-radius: 0; background: transparent; }
+.stat-card + .stat-card { border-left: 1px solid var(--line); }
+.stat-card__top { color: #68746c; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .62rem; letter-spacing: .035em; text-transform: uppercase; }
+.stat-card__top svg { color: var(--accent); }
+.stat-card__value { color: #20342e; font-variant-numeric: tabular-nums; }
+.panel, .table-panel { border-radius: 3px; background: var(--paper); }
+.panel { border-color: var(--line); }
+.workflow-strip li { background: #f8f7f1; }
+.workflow-strip li:first-child, .workflow-strip li:last-child { border-radius: 2px 0 0 2px; }
+.workflow-strip li:last-child { border-radius: 0 2px 2px 0; }
+.workflow-strip__current { background: var(--accent-soft) !important; }
+.data-table th { border-top: 2px solid var(--accent); color: #53645b; background: #f3f1e8; font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: .61rem; letter-spacing: .035em; text-transform: uppercase; }
+.data-table td { border-bottom-color: #e8e6dc; }
+.data-table tbody tr:nth-child(even) { background: #fbfaf6; }
+.data-table tbody tr:hover { background: #f1f3eb; }
+.table-panel { border-color: var(--line); }
+.table-panel .table-scroll { border-top-color: var(--line-strong); }
+.role-card:hover { background: #f3f3eb; }
+.role-card__icon { border-color: #d6d8ca; border-radius: 3px; background: #f6f4eb; }
+.role-card__arrow { color: var(--accent); }
+.student-record-banner { background: var(--paper); }
+
+@media (max-width: 1120px) {
+  .stats-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 850px) {
+  .hero-copy { padding-left: 17px; }
+}
+@media (max-width: 620px) {
+  .content-section { padding-block: 55px; }
+  .hero-copy { padding-left: 13px; }
+  .stat-card { padding: 12px 11px; }
+  .stat-card__top { font-size: .58rem; }
+  .data-table th { font-size: .57rem; letter-spacing: .02em; }
+}

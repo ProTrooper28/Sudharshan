@@ -163,7 +163,7 @@ export function RoleAccessPage() {
   ];
   return <PublicPageFrame><main className="access-page content-container"><div className="access-heading"><p className="eyebrow">PROTOTYPE ENTRY</p><h1>Choose your prototype role</h1><p>Explore the proposed information architecture through a role-specific interface.</p></div>
     <Notice label="Prototype access">Prototype access. No production authentication is connected.</Notice>
-    <div className="role-card-list">{roles.map(({ role, icon: Icon }, index) => <Link key={role} className="role-card" to={`/${role}`}><span className="role-card__index">0{index + 1}</span><span className="role-card__icon"><Icon size={21} strokeWidth={1.7} /></span><span className="role-card__body"><strong>{roleDetails[role].label}</strong><span>{roleDetails[role].summary}.</span></span><span className="role-card__arrow"><ArrowRight size={18} /></span></Link>)}</div>
+    <div className="role-card-list">{roles.map(({ role, icon: Icon }, index) => <Link key={role} className="role-card" to={`/${role}`}><span className="role-card__index">0{index + 1}</span><span className="role-card__icon"><Icon size={21} strokeWidth={1.7} /></span><span className="role-card__body"><strong>{roleDetails[role].label}</strong><span>{roleDetails[role].summary}</span></span><span className="role-card__arrow"><ArrowRight size={18} /></span></Link>)}</div>
     <p className="access-footnote">Each option opens a simulation. Data shown in role dashboards is synthetic demo content.</p>
   </main></PublicPageFrame>;
 }
