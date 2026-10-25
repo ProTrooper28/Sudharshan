@@ -120,11 +120,15 @@ export function DataTable({
         <tbody>
           {rows.length === 0 ? (
             <tr><td className="data-table__empty" colSpan={columns.length}>{emptyMessage}</td></tr>
-          ) : rows.map((row, index) => (
-            <tr key={String(row.reference ?? row.id ?? index)}>
-              {columns.map((column) => <td key={column.key}>{column.render ? column.render(row) : row[column.key]}</td>)}
-            </tr>
-          ))}
+          ) : rows.map((row, index) => {
+            const candidateKey = row.rowKey ?? row.id;
+            const rowKey = typeof candidateKey === 'string' || typeof candidateKey === 'number' ? candidateKey : index;
+            return (
+              <tr key={rowKey}>
+                {columns.map((column) => <td key={column.key}>{column.render ? column.render(row) : row[column.key]}</td>)}
+              </tr>
+            );
+          })}
         </tbody>
       </table>
     </div>
