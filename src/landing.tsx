@@ -281,6 +281,36 @@ function Kicker({ index, children, light = false }: { index: string; children: R
 export function LandingPage() {
   useScrollReveal();
   const heroRef = useRef<HTMLElement>(null);
+  const wordmarkRef = useRef<HTMLSpanElement>(null);
+
+  // Typographic guides are an opt-in layer: they are off until the reader
+  // asks for them, and they never arrive when the reader has asked the
+  // system for reduced motion.
+  const [reducedMotion] = useState(
+    () => window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches ?? false
+  );
+  const [typoguide, setTypoguide] = useState(false);
+  const [markBox, setMarkBox] = useState({ w: 0, h: 0 });
+  const guideOn = typoguide && !reducedMotion;
+
+  // Live frame measurement for the guide panel, read only while it is open.
+  useEffect(() => {
+    if (!guideOn) return;
+    const read = () => {
+      const rect = wordmarkRef.current?.getBoundingClientRect();
+      if (rect) setMarkBox({ w: Math.round(rect.width), h: Math.round(rect.height) });
+    };
+    read();
+    window.addEventListener('resize', read);
+    return () => window.removeEventListener('resize', read);
+  }, [guideOn]);
+
+  const toggleGuides = () => {
+    // The guide panels only exist on wide screens, so the control that opens
+    // them does too — below that, the wordmark keeps its own click behaviour.
+    if (reducedMotion || window.innerWidth < 1200) return;
+    setTypoguide(value => !value);
+  };
 
   // One passive scroll listener drives a single custom property, which the
   // atmosphere layers translate by a few pixels. No listener at all under
@@ -329,7 +359,12 @@ export function LandingPage() {
 
             <h1 className="lp-hero__title" id="lp-hero-title">
               <span className="sr-only">Sudharshan: </span>
-              <span className="lp-hero__wordmark" aria-hidden="true">
+              <span
+                className="lp-hero__wordmark"
+                aria-hidden="true"
+                ref={wordmarkRef}
+                onClick={toggleGuides}
+              >
                 <TechText
                   text="Sudharshan"
                   fontWeight={700}
@@ -340,6 +375,8 @@ export function LandingPage() {
                   specks={12}
                   clickKick
                   guides={false}
+                  labels={guideOn}
+                  intro={guideOn ? 'metrics' : 'none'}
                 />
               </span>
               <span className="lp-hero__headline">
@@ -367,8 +404,104 @@ export function LandingPage() {
               <span>Prototype environment</span>
               <span className="lp-hero__dot" aria-hidden="true" />
               <span>Institution · Student · AICTE</span>
+              {!reducedMotion && (
+                <>
+                  <span className="lp-hero__dot lp-hero__dot--guide" aria-hidden="true" />
+                  <button
+                    type="button"
+                    className="lp-hero__guidebtn"
+                    onClick={toggleGuides}
+                    aria-pressed={guideOn}
+                  >
+                    Typography guides
+                  </button>
+                </>
+              )}
             </p>
           </div>
+
+          <aside
+            className={`lp-typoguide${guideOn ? ' is-open' : ''}`}
+            aria-hidden={!guideOn}
+            aria-label="Typography guides"
+          >
+            <p className="lp-panel__head">
+              <span className="lp-panel__dot" aria-hidden="true" />
+              Typography Guides
+              <button type="button" className="lp-panel__close" onClick={toggleGuides} tabIndex={guideOn ? 0 : -1}>
+                <X size={13} aria-hidden="true" />
+                <span className="sr-only">Hide typography guides</span>
+              </button>
+            </p>
+            <dl className="lp-typoguide__list">
+              <div>
+                <dt>Text</dt>
+                <dd>Sudharshan · 10 glyphs</dd>
+              </div>
+              <div>
+                <dt>Family</dt>
+                <dd>Public Sans</dd>
+              </div>
+              <div>
+                <dt>Weight</dt>
+                <dd>700 · Bold</dd>
+              </div>
+              <div>
+                <dt>Size</dt>
+                <dd>200 · auto-fit</dd>
+              </div>
+              <div>
+                <dt>Tracking</dt>
+                <dd>−5%</dd>
+              </div>
+              <div>
+                <dt>Reveal</dt>
+                <dd>Letter · specks 12</dd>
+              </div>
+              <div>
+                <dt>Accent</dt>
+                <dd>
+                  <span className="lp-typoguide__swatch" aria-hidden="true" />#2FD0BC
+                </dd>
+              </div>
+              <div>
+                <dt>Frame</dt>
+                <dd>
+                  {markBox.w ? `${markBox.w} × ${markBox.h} px` : '—'}
+                </dd>
+              </div>
+            </dl>
+            <p className="lp-typoguide__note">Click the wordmark to toggle these guides.</p>
+          </aside>
+
+          <aside className="lp-readout" aria-label="Prototype readout">
+            <p className="lp-panel__head">
+              <span className="lp-panel__dot" aria-hidden="true" />
+              Prototype readout
+            </p>
+            <dl className="lp-readout__list">
+              <div>
+                <dt>Interfaces</dt>
+                <dd>3 · Institution, Student, AICTE</dd>
+              </div>
+              <div>
+                <dt>Record path</dt>
+                <dd>4 stages · submit to visibility</dd>
+              </div>
+              <div>
+                <dt>Records</dt>
+                <dd>Synthetic demo data</dd>
+              </div>
+              <div>
+                <dt>Verification</dt>
+                <dd>QR / credentials · staged</dd>
+              </div>
+              <div>
+                <dt>Backend</dt>
+                <dd>Not connected · prototype</dd>
+              </div>
+            </dl>
+          </aside>
 
           <HeroStage />
         </section>

@@ -419,6 +419,146 @@ body:has(.lp) { background: #06150f; }
   text-transform: uppercase;
 }
 .lp-hero__dot { width: 3px; height: 3px; border-radius: 50%; background: currentColor; }
+.lp-hero__guidebtn {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  border-bottom: 1px dashed rgba(186, 210, 201, .45);
+  transition: color .25s ease, border-color .25s ease, text-shadow .25s ease;
+}
+.lp-hero__guidebtn:hover { color: var(--lp-teal-pale); border-color: rgba(47, 208, 188, .7); }
+.lp-hero__guidebtn[aria-pressed='true'] {
+  color: var(--lp-teal-lit);
+  border-bottom-style: solid;
+  border-color: rgba(47, 208, 188, .8);
+  text-shadow: 0 0 12px rgba(47, 208, 188, .55);
+}
+.lp-hero__guidebtn:focus-visible { outline: 2px solid var(--lp-teal-lit); outline-offset: 3px; }
+
+/* Hero side panels — a typographic readout on the left, the product's own
+   numbers on the right. Both are static content with one fade; they sit outside
+   the hero column and never appear below 1200px, where the composition is
+   already at its narrowest. */
+.lp-typoguide,
+.lp-readout {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  width: 208px;
+  padding: 13px 14px 14px;
+  transform: translateY(-46%);
+  border: 1px solid rgba(47, 208, 188, .2);
+  border-radius: 3px;
+  background: rgba(4, 20, 16, .62);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, .34);
+  backdrop-filter: blur(9px);
+  transition: opacity .45s ease, transform .45s cubic-bezier(.22, .8, .3, 1), visibility .45s;
+}
+.lp-typoguide { left: clamp(18px, 2.4vw, 34px); }
+.lp-readout { right: clamp(18px, 2.4vw, 34px); }
+.lp-typoguide {
+  opacity: 0;
+  visibility: hidden;
+  transform: translate(-12px, -46%);
+}
+.lp-typoguide.is-open { opacity: 1; visibility: visible; transform: translate(0, -46%); }
+.lp-panel__head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 11px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid rgba(47, 208, 188, .18);
+  color: rgba(206, 240, 231, .86);
+  font-family: var(--lp-mono);
+  font-size: .58rem;
+  font-weight: 500;
+  letter-spacing: .16em;
+  line-height: 1.4;
+  text-transform: uppercase;
+}
+.lp-panel__dot {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 auto;
+  border-radius: 50%;
+  background: var(--lp-teal-lit);
+  box-shadow: 0 0 9px rgba(47, 208, 188, .85);
+}
+.lp-panel__close {
+  display: inline-grid;
+  width: 22px;
+  height: 22px;
+  margin-left: auto;
+  padding: 0;
+  place-items: center;
+  border: 1px solid rgba(47, 208, 188, .3);
+  border-radius: 2px;
+  background: transparent;
+  color: rgba(206, 240, 231, .78);
+  cursor: pointer;
+  transition: background .2s ease, color .2s ease;
+}
+.lp-panel__close:hover { background: rgba(47, 208, 188, .16); color: #eafff9; }
+.lp-panel__close:focus-visible { outline: 2px solid var(--lp-teal-lit); outline-offset: 2px; }
+.lp-typoguide__list,
+.lp-readout__list { display: grid; gap: 7px; margin: 0; }
+.lp-typoguide__list > div,
+.lp-readout__list > div { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.lp-typoguide__list dt,
+.lp-readout__list dt {
+  color: rgba(159, 232, 217, .6);
+  font-family: var(--lp-mono);
+  font-size: .56rem;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+}
+.lp-typoguide__list dd,
+.lp-readout__list dd {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  color: rgba(232, 243, 237, .9);
+  font-family: var(--lp-mono);
+  font-size: .6rem;
+  letter-spacing: .04em;
+  text-align: right;
+}
+.lp-readout__list dd { max-width: 116px; text-align: right; line-height: 1.5; }
+.lp-typoguide__swatch {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  background: var(--lp-teal-lit);
+  box-shadow: 0 0 8px rgba(47, 208, 188, .8);
+}
+.lp-typoguide__note {
+  margin: 11px 0 0;
+  padding-top: 9px;
+  border-top: 1px solid rgba(47, 208, 188, .14);
+  color: rgba(186, 210, 201, .58);
+  font-family: var(--lp-mono);
+  font-size: .53rem;
+  letter-spacing: .07em;
+  line-height: 1.6;
+}
+@media (max-width: 1200px) {
+  .lp-typoguide,
+  .lp-readout,
+  .lp-hero__guidebtn,
+  .lp-hero__dot--guide { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lp-typoguide,
+  .lp-readout,
+  .lp-hero__guidebtn { transition: none; }
+}
 
 /* Hero stage: the record's path along a lit bus ---------------------------- */
 .lp-stage { position: relative; z-index: 1; margin-top: auto; height: clamp(206px, 26vh, 292px); }
