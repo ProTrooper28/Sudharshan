@@ -1,0 +1,9 @@
+apaar_id,name,dob,gender,nationality,parent_name,programme,academic_year,quota,admission_date,justification_doc
+123456789012,Aarav Sharma,2004-05-12,Male,Indian,Ramesh Sharma,B.Tech Computer Science,2026,regular,2026-07-15,
+,Sunita Deshmukh,2003-08-22,Female,Indian,Vijay Deshmukh,B.Tech Computer Science,2026,regular,2026-07-16,
+987654321,Invalid Length Apaar,2004-01-10,Male,Indian,Anand Kumar,B.Tech Computer Science,2026,regular,2026-07-16,
+123456789012,Aarav Sharma Duplicate,2004-05-12,Male,Indian,Ramesh Sharma,B.Tech Computer Science,2026,regular,2026-07-17,
+555566667777,Rohan Verma,2004-01-15,Male,Indian,Suresh Verma,B.Tech Computer Science,2026,regular,2026-07-18,
+987654321098,John Smith,2003-11-20,Male,Foreign National,Robert Smith,B.Tech Computer Science,2026,fn,2026-07-19,
+111122223333,Rahul K Sharma,2004-05-12,Male,Indian,Ramesh Sharma,B.Tech Computer Science,2026,regular,2026-07-20,
+444455556666,Over Intake Student 1,2004-03-14,Female,Indian,Mahesh Rao,B.Tech Computer Science,2026,regular,2026-07-20,

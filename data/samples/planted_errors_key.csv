@@ -1,0 +1,22 @@
+row,expected_rule,severity,why,apaar_id,name
+6,R04,BLOCK,Duplicate row in file (first copy),869583219712,Pooja Deshmukh
+9,R02,BLOCK,APAAR ID contains letters,12345ABC9012,Diya Rao
+16,R01,BLOCK,Missing APAAR ID,,Aditya Joshi
+19,R04,BLOCK,Duplicate row in file,869583219712,Pooja Deshmukh
+21,R02,BLOCK,APAAR ID too short (9 digits),987654321,Vivaan Reddy
+23,R05,ERROR,Already enrolled at this institution for 2026,245095632170,Vivaan Sharma
+26,R06,CRITICAL,Dual enrolment: already active at VJTI_MUMBAI,957494902284,Sai Joshi
+29,R03,BLOCK,APAAR ID deactivated,999988887777,Deactivated Student
+41,R09,WARN,Admission date (2022) far from academic year 2026,284376992966,Karan Das
+42,R09,ERROR,DOB not in YYYY-MM-DD format,266489008243,Rahul Joshi
+52,R09,WARN,Implausible age (DOB 2018),914134931799,Vivaan Rao
+54,R03,BLOCK,APAAR ID well-formed but never issued (not in registry),700000000001,Ishaan Bose
+55,R08,ERROR,NRI quota limit (3) breached,744209494071,Meera Verma
+56,R10,WARN,Fuzzy duplicate of an existing student under another APAAR ID,681260422322,Pooja K. Malhotra
+87,R08,ERROR,NRI admission without justification document,421145775843,Rahul Joshi
+90,R07,WARN,Intake 90% alert,959044790581,Vivaan Iyer
+91,R07,WARN,Intake 90% alert,463280944853,Kabir Reddy
+92,R07,WARN,Intake 90% alert,417648467358,Rahul Singh
+93,R07,WARN,Intake 90% alert,800916923278,Pooja Yadav
+94,R07,CRITICAL,Over-intake: admissions exceed approved intake,515716042612,Rahul Das
+95,R07,CRITICAL,Over-intake: admissions exceed approved intake,530265099626,Ishaan Rao

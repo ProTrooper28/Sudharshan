@@ -1,6 +1,54 @@
-node_modules/
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
 dist/
-*.tsbuildinfo
+build/
+.eggs/
+*.so
+
+# Virtual environment (never commit the .venv — it's 426 MB of platform binaries)
+.venv/
+venv/
+env/
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+sudarshan.db
+
+# Pytest / test artefacts
+.pytest_cache/
+htmlcov/
+.coverage
+*.lcov
+
+# IDE
+.vscode/
+.idea/
+*.iml
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+
+# Secrets / env
 .env
 .env.*
 !.env.example
+
+# Frontend
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+
+# ML artefacts (large binaries — store in DVC or artefact registry)
+backend/app/ai_ml/saved_models/*.joblib
+backend/app/ai_ml/saved_models/*.pkl
+

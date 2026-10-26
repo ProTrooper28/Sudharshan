@@ -1,0 +1,53 @@
+{
+  "seat_configs": {
+    "B.Tech Computer Science|2026": {
+      "approved_intake": 60,
+      "nri_limit": 3,
+      "oci_limit": 3,
+      "fn_limit": 3,
+      "supernumerary_limit": 3
+    },
+    "B.Tech Electronics|2026": {
+      "approved_intake": 40,
+      "nri_limit": 3,
+      "oci_limit": 3,
+      "fn_limit": 3,
+      "supernumerary_limit": 3
+    },
+    "B.Tech Mechanical|2026": {
+      "approved_intake": 30,
+      "nri_limit": 3,
+      "oci_limit": 3,
+      "fn_limit": 3,
+      "supernumerary_limit": 3
+    }
+  },
+  "current_enrolment_counts": {
+    "B.Tech Computer Science|2026": 0,
+    "B.Tech Electronics|2026": 0,
+    "B.Tech Mechanical|2026": 24
+  },
+  "external_active_enrolments": {
+    "957494902284": [
+      {
+        "inst_id": "VJTI_MUMBAI",
+        "programme": "B.Tech IT",
+        "academic_year": "2026"
+      }
+    ]
+  },
+  "existing_students": [
+    {
+      "apaar_id": "318384251352",
+      "name": "Pooja Malhotra",
+      "dob": "2006-05-20",
+      "parent_name": "Sureshkumar Malhotra"
+    }
+  ],
+  "existing_institution_enrolments": [
+    [
+      "245095632170",
+      "2026"
+    ]
+  ]
+}
