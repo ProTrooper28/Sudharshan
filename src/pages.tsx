@@ -2,11 +2,8 @@ import { useMemo, useState, type FormEvent, type ReactNode } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import {
   ArrowRight,
-  BookOpen,
   Building2,
-  Check,
   ChevronRight,
-  CircleHelp,
   ClipboardCheck,
   FileCheck2,
   FileClock,
@@ -33,6 +30,7 @@ import {
   StatusBadge,
 } from './components';
 import { demoActivity, demoRecords, roleDetails, routeInfo } from './data/demo';
+import { StudentActivityPage, StudentCredentialsPage, StudentConsentsPage, StudentEnrollmentsPage, StudentDashboardPage, StudentNotificationsPage, StudentProfilePage, StudentSettingsPage, StudentVerificationHistoryPage } from './student-portal';
 import type { DemoRecord, Role } from './types';
 
 const publicNav = [
@@ -205,19 +203,10 @@ function CollegeDashboard() {
   </>;
 }
 
-function StudentDashboard() {
-  return <><PageHeader eyebrow="CANDIDATE / STUDENT · PROTOTYPE ROLE" title="Your record overview" description="A clear view of the information and confirmation status a future service could present." actions={<StatusBadge tone="info">Prototype</StatusBadge>} />
-    <Notice label="Synthetic profile">This is a demonstration view only. It is not connected to your identity or any real student record.</Notice>
-    <div className="student-record-banner"><div className="student-record-banner__identity"><span className="student-record-banner__avatar"><UserRound size={23} /></span><div><span className="eyebrow">SYNTHETIC STUDENT REFERENCE</span><h2>Candidate example</h2><code>APAAR-DEMO-0000</code></div></div><StatusBadge tone="warning">Confirmation pending · illustrative</StatusBadge></div>
-    <div className="stats-grid stats-grid--three"><StatCard label="Academic record" value="Example shown" detail="Synthetic academic entry" icon={BookOpen} /><StatCard label="Institution submission" value="Illustrative" detail="No record was submitted" icon={Building2} /><StatCard label="Verification status" value="Illustrative" detail="No identity check is performed" icon={ShieldCheck} /></div>
-    <div className="dashboard-columns student-dashboard-columns"><section className="panel"><SectionHeader title="What is shown here" description="Sample views for a future student portal." /><ul className="student-checklist"><li><Check /> Academic record example <span>Demo</span></li><li><CircleHelp /> Confirmation state <span>Illustrative</span></li><li><FileClock /> Data activity <span>Not connected</span></li><li><ShieldCheck /> Consent history <span>Not stored</span></li></ul><Link to="/student/academic-record" className="text-link">View academic record <ArrowRight size={15} /></Link></section><section className="panel"><SectionHeader title="Example data activity" description="No actual events are recorded." /><ActivityTimeline items={demoActivity.slice(0, 2)} /><Link to="/student/activity" className="text-link">View activity page <ArrowRight size={15} /></Link></section></div>
-  </>;
-}
-
 function RoleDashboard({ role }: { role: Role }) {
   if (role === 'aicte') return <AicteDashboard />;
   if (role === 'college') return <CollegeDashboard />;
-  return <StudentDashboard />;
+  return <StudentDashboardPage />;
 }
 
 export function RolePage({ role }: { role: Role }) {
@@ -226,7 +215,16 @@ export function RolePage({ role }: { role: Role }) {
   const page = routeInfo[path];
   if (!page || page.role !== role) return <NotFoundPage path={path} />;
   if (path === `/${role}`) return <RoleDashboard role={role} />;
-  if (path === '/aicte/students' || path === '/college/students' || path === '/student/academic-record') {
+  if (path === '/student/profile') return <StudentProfilePage />;
+  if (path === '/student/academic-record') return <StudentEnrollmentsPage />;
+  if (path === '/student/consent') return <StudentConsentsPage />;
+  if (path === '/student/activity') return <StudentActivityPage />;
+  if (path === '/student/verification-history') return <StudentVerificationHistoryPage />;
+  if (path === '/student/verification') return <StudentVerificationHistoryPage />;
+  if (path === '/student/notifications') return <StudentNotificationsPage />;
+  if (path === '/student/qr') return <StudentCredentialsPage />;
+  if (path === '/student/settings') return <StudentSettingsPage />;
+  if (path === '/aicte/students' || path === '/college/students') {
     return <><PageHeader eyebrow={`${roleDetails[role].label.toUpperCase()} · DEMO DATA`} title={page.title} description={page.description} /><RecordsTable role={role} /></>;
   }
   if (path === '/student/qr' || path === '/college/credentials') {

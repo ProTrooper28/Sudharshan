@@ -56,17 +56,18 @@ export function Breadcrumbs({ role, title }: { role: Role; title: string }) {
 type TopBarProps = {
   role: Role;
   title: string;
+  environmentLabel?: string;
   menuOpen: boolean;
   onMenuToggle: () => void;
   menuButtonRef: Ref<HTMLButtonElement>;
 };
 
-export function TopBar({ role, title, menuOpen, onMenuToggle, menuButtonRef }: TopBarProps) {
+export function TopBar({ role, title, menuOpen, onMenuToggle, menuButtonRef, environmentLabel = 'Demo environment' }: TopBarProps) {
   return (
     <header className="topbar">
       <button ref={menuButtonRef} className="topbar__menu icon-button" type="button" aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'} aria-expanded={menuOpen} aria-controls="role-navigation" onClick={onMenuToggle}>{menuOpen ? <X size={20} /> : <Menu size={20} />}</button>
       <Breadcrumbs role={role} title={title} />
-      <div className="topbar__status"><span className="topbar__status-dot" aria-hidden="true" /> Demo environment</div>
+      <div className="topbar__status"><span className="topbar__status-dot" aria-hidden="true" /> {environmentLabel}</div>
       <Link className="topbar__back" to="/prototype/access">Change role <ArrowLeft size={14} aria-hidden="true" /></Link>
     </header>
   );
@@ -78,6 +79,8 @@ export function AppShell({ role, children }: { role: Role; children: import('rea
   const location = useLocation();
   const detail = roleDetails[role];
   const page = routeInfo[location.pathname] ?? { title: detail.dashboard, description: '' };
+  const isCandidateDataPage = role === 'student' &&
+    (location.pathname === '/student/profile' || location.pathname === '/student/academic-record');
   const drawerRef = useRef<HTMLElement>(null);
   const menuButtonRef = useRef<HTMLButtonElement>(null);
   const wasOpenRef = useRef(false);
@@ -133,9 +136,9 @@ export function AppShell({ role, children }: { role: Role; children: import('rea
       <Sidebar role={role} open={menuOpen} compact={isCompact} onClose={() => setMenuOpen(false)} drawerRef={drawerRef} />
       {menuOpen && <button className="mobile-scrim" type="button" aria-label="Close navigation" onClick={() => setMenuOpen(false)} />}
       <div className="app-workspace">
-        <TopBar role={role} title={page.title} menuOpen={menuOpen} onMenuToggle={() => setMenuOpen(!menuOpen)} menuButtonRef={menuButtonRef} />
+        <TopBar role={role} title={page.title} menuOpen={menuOpen} onMenuToggle={() => setMenuOpen(!menuOpen)} menuButtonRef={menuButtonRef} environmentLabel={isCandidateDataPage ? 'Candidate portal' : undefined} />
         <main id="main-content" className="main-content" tabIndex={-1}>{children}</main>
-        <footer className="app-footer"><span>SIH26263 · Prototype interface</span><span>Demo content only. No production service is connected.</span></footer>
+        <footer className="app-footer"><span>{isCandidateDataPage ? 'SIH26263 · Candidate portal' : 'SIH26263 · Prototype interface'}</span><span>{isCandidateDataPage ? 'Profile and enrollment require a configured candidate account.' : 'Demo content only. No production service is connected.'}</span></footer>
       </div>
     </div>
   );

@@ -71,6 +71,7 @@ export const navigation: Record<Role, NavigationItem[]> = {
     { path: '/college/settings', label: 'Settings', icon: Settings },
   ],
   student: [
+    { path: '/student', label: 'Dashboard', icon: LayoutDashboard },
     { path: '/student/profile', label: 'My Profile', icon: UserRound },
     { path: '/student/academic-record', label: 'My Academic Record', icon: BookOpen },
     { path: '/student/verification', label: 'Verification Status', icon: ShieldCheck },
@@ -133,7 +134,7 @@ const roleRoutes: Record<Role, [string, string, string][]> = {
     ['/student/documents', 'Documents', 'Document access is not connected in this prototype'],
     ['/student/notifications', 'Notifications', 'Notifications are not sent in this prototype'],
     ['/student/verification-history', 'Verification History', 'No real verification history is available'],
-    ['/student/settings', 'Settings', 'Student settings are not available in this prototype'],
+    ['/student/settings', 'Settings', 'Candidate preferences and account security'],
   ],
 };
 
