@@ -1,0 +1,319 @@
+/* Trust & Verification System Styles - Sudharshan */
+
+/* Verification Badges */
+.badge-verified-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+  color: #ffffff;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 25px -5px rgba(16, 185, 129, 0.4), 0 8px 10px -6px rgba(16, 185, 129, 0.2);
+  position: relative;
+}
+
+.badge-revoked-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+  color: #ffffff;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 25px -5px rgba(239, 68, 68, 0.4), 0 8px 10px -6px rgba(239, 68, 68, 0.2);
+}
+
+.badge-expired-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+  box-shadow: 0 10px 25px -5px rgba(245, 158, 11, 0.4);
+}
+
+.badge-tampered-large {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  background: #7f1d1d;
+  color: #fee2e2;
+  border: 2px solid #ef4444;
+  padding: 12px 28px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 1.25rem;
+  letter-spacing: -0.01em;
+}
+
+/* Verifier Checkpoint Card */
+.verifier-card {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: var(--shadow-1);
+  margin-bottom: 24px;
+}
+
+.verifier-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  border-bottom: 1px solid var(--line);
+  padding-bottom: 24px;
+  margin-bottom: 24px;
+}
+
+.qr-box-verified {
+  background: #f0fdf4;
+  border: 3px solid #10b981;
+  border-radius: 20px;
+  padding: 24px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(16, 185, 129, 0.15);
+}
+
+.qr-box-revoked {
+  background: #fef2f2;
+  border: 3px solid #ef4444;
+  border-radius: 20px;
+  padding: 24px;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(239, 68, 68, 0.15);
+}
+
+.qr-box-center-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #ffffff;
+  border-radius: 50%;
+  padding: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Hash Chain Visualizer */
+.hash-chain-container {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 24px;
+}
+
+.hash-block {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 16px 20px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.hash-block:hover {
+  border-color: var(--accent);
+  box-shadow: 0 4px 12px rgba(21, 91, 88, 0.08);
+}
+
+.hash-block--tampered {
+  background: #fff5f5;
+  border: 2px solid #ef4444 !important;
+  box-shadow: 0 0 15px rgba(239, 68, 68, 0.2);
+}
+
+.hash-block--tampered::before {
+  content: "TAMPER DETECTED";
+  position: absolute;
+  top: -12px;
+  right: 20px;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+}
+
+.hash-connector {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--muted-2);
+  font-size: 0.75rem;
+  font-family: var(--lp-mono, monospace);
+  padding: 4px 0;
+}
+
+.hash-mono {
+  font-family: 'IBM Plex Mono', Consolas, monospace;
+  font-size: 0.75rem;
+  background: var(--canvas);
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: var(--ink);
+  word-break: break-all;
+}
+
+/* Consent Switchboard */
+.consent-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.consent-switch {
+  position: relative;
+  display: inline-block;
+  width: 44px;
+  height: 24px;
+}
+
+.consent-switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.consent-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #cbd5e1;
+  transition: .3s;
+  border-radius: 24px;
+}
+
+.consent-slider:before {
+  position: absolute;
+  content: "";
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: white;
+  transition: .3s;
+  border-radius: 50%;
+}
+
+input:checked + .consent-slider {
+  background-color: var(--accent);
+}
+
+input:checked + .consent-slider:before {
+  transform: translateX(20px);
+}
+
+input:disabled + .consent-slider {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+/* Certificate Generator view (Req 10) */
+.aicte-certificate {
+  background: #ffffff;
+  border: 8px double #155b58;
+  padding: 40px;
+  max-width: 800px;
+  margin: 0 auto;
+  position: relative;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  font-family: 'Public Sans', sans-serif;
+}
+
+.certificate-seal {
+  position: absolute;
+  bottom: 40px;
+  right: 50px;
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 2px dashed #c9a56a;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.65rem;
+  color: #c9a56a;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.demo-stepper {
+  display: flex;
+  align-items: center;
+  background: #ffffff;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 20px;
+  margin-bottom: 24px;
+  overflow-x: auto;
+  gap: 12px;
+}
+
+.demo-step-btn {
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 200, 0, 0.35);
+  background: var(--accent, #14594D);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px rgba(255, 200, 0, 0.45);
+  transition: all 0.2s ease;
+}
+
+.demo-step-btn:hover {
+  background: var(--accent, #14594D);
+  color: #ffffff;
+  border-color: rgba(255, 200, 0, 0.65);
+  box-shadow: 0 4px 14px rgba(255, 200, 0, 0.7);
+}
+
+.demo-step-btn--active {
+  background: var(--accent-dark, #0d3d3a);
+  color: #ffffff;
+  border-color: rgba(255, 200, 0, 0.8);
+  box-shadow: 0 4px 14px rgba(255, 200, 0, 0.75);
+}
+
+.demo-step-btn--active:hover {
+  background: var(--accent-dark, #0d3d3a);
+  color: #ffffff;
+  border-color: rgba(255, 200, 0, 0.95);
+  box-shadow: 0 4px 18px rgba(255, 200, 0, 0.9);
+}
+

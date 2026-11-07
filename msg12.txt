@@ -1,0 +1,24 @@
+You're right that upload, validation, a dashboard, and a QR will look the same across most teams. A USP has to be something the PS doesn't spell out but that solves its real problem. Here are three ideas, from strongest to weakest.
+
+**1. Student-confirmed enrolment (my top pick)**
+
+The PS's core problem is that AICTE can't trust institution-reported data. Every other team will still have the institution as the only source of truth. You add a second party: when an institution uploads a record, the student gets a notification (via APAAR-linked mobile/OTP) saying "Institution X has enrolled you in Programme Y. Confirm?"
+
+- Fake or ghost students inflating enrolment numbers can't be confirmed.
+- Dual enrolment surfaces naturally, since a student can't confirm two full-time seats.
+- The same step captures consent, so requirement 8 is covered without a separate flow.
+- Records get a status such as *Institution-submitted → Student-confirmed → Verified*, which is a clear thing to show on a dashboard.
+
+**2. Prevention, not just detection**
+
+Most teams will flag over-intake after upload. You enforce a live seat ledger: once an institution reaches its approved intake, new admissions are blocked unless they're tagged supernumerary, NRI, OCI, or FN with the required justification. AICTE sees attempts to bypass this as risk signals. The pitch is "stops the problem before it happens."
+
+**3. Natural-language queries for AICTE officers**
+
+An officer types "institutions in Maharashtra where NRI enrolment exceeds 15% of intake" and gets a table or chart. It's easy to demo and makes the dashboard feel intelligent rather than just a set of charts. It also covers the "go beyond data collection" line in the Innovation section.
+
+**My suggestion:** make #1 your hero, since it changes how trust works. Support it with #2, and add #3 only if you have time. Your pitch becomes: *"Today AICTE trusts the institution's word. We make it a handshake between the institution and the student, enforced in real time."*
+
+**Honest caveat:** some teams may think of something similar, and no USP is guaranteed to be unique. What separates winners is a working demo of the idea. A student confirming an enrolment on a phone screen during your demo will be remembered more than a slide.
+
+Want me to map the student-confirmation flow into your screens and team split?
