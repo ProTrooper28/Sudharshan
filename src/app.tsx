@@ -12,6 +12,7 @@ import {
 } from './pages';
 import { LandingPage } from './landing';
 import { PublicFooter } from './components';
+import { PublicCredentialVerificationPage } from './student-portal';
 import type { Role } from './types';
 
 // The landing page carries its own footer, so the shared one is only added to
@@ -44,6 +45,7 @@ export function App() {
           <Route path="/terms" element={<LegalPage kind="terms" />} />
           <Route path="/cookies" element={<LegalPage kind="cookies" />} />
           <Route path="/contact" element={<ContactPage />} />
+          <Route path="/verify/:reference" element={<PublicCredentialVerificationPage />} />
         </Route>
         <Route path="/aicte/*" element={<RoutedRole role="aicte" />} />
         <Route path="/college/*" element={<RoutedRole role="college" />} />

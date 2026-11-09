@@ -119,7 +119,7 @@ These principles describe intended product architecture. They are not claims tha
 | **College Official** | Manage student records; add students; upload data; inspect validation results; resolve flagged records; monitor submissions; track student confirmations; manage future credential/QR workflows; and inspect institution activity. |
 | **Candidate / Student** | View their profile and academic record; confirm enrolment; inspect verification status and data activity; manage consent; view future QR/credentials; inspect verification history; and view notifications. |
 
-The current UI simulates role selection for demonstration. It does not authenticate these roles or authorize access to real data.
+The existing public role selector and AICTE/College shells remain prototype navigation. Candidate profile and enrollment API requests now use Supabase Auth sessions and server-side candidate-role checks; the other role shells are still not authenticated or authorized for real data.
 
 ## 6. Current Implementation Status
 
@@ -135,7 +135,7 @@ The current UI simulates role selection for demonstration. It does not authentic
 | Role selection | **Implemented** | AICTE, College Official and Candidate / Student cards navigate to their UI simulations. |
 | AICTE application shell | **Partial: UI shell and illustrative dashboard** | Navigation, dashboard structure and placeholder destinations exist. No official AICTE data or review service is connected. |
 | College application shell | **Partial: UI shell and illustrative dashboard** | Navigation, dashboard structure and synthetic examples exist. Student intake, validation and submission are not active. |
-| Student application shell | **Partial: UI shell and illustrative dashboard** | Student-oriented pages are represented. Confirmation, consent storage, notifications and verification are not active. |
+| Student application shell | **Partial** | The dashboard remains illustrative. Profile and enrollment pages use the candidate API when configured; the other student modules remain placeholders. Confirmation, consent storage, notifications and verification are not active. |
 | Shared component system | **Implemented for the prototype** | Shared navigation, notices, tables, status badges, forms, timelines and other presentation components are in the React source. |
 | Responsive layouts | **Implemented as a UI baseline** | Responsive styling and mobile navigation are present. This is not a formal accessibility or device-compatibility certification. |
 | Legal page placeholders | **Implemented as draft UI** | Privacy, terms and cookie routes contain prototype/draft content; they are not reviewed legal policies. |
@@ -146,9 +146,10 @@ Several shared components exist in the source but are not referenced by any rout
 
 | Capability | Status |
 |---|---|
-| Node.js + Express API | **Planned; not present in this repository** |
-| Supabase schema or database operations | **Planned; not present or connected** |
-| Production authentication, OTP, authorization or account recovery | **Planned; not implemented** |
+| Node.js + Express API | **Partial: candidate session, profile and enrollment read endpoints** |
+| Supabase schema or database operations | **Additive migration included; not applied or connected by this repository** |
+| Candidate authentication and authorization | **Supabase password sign-in, HTTP-only session cookies, candidate-role check and owner-scoped RLS; configuration required** |
+| OTP or account recovery | **Not implemented** |
 | Live APAAR or Aadhaar service | **Not implemented** |
 | Student intake, upload, submission and confirmation | **Planned; UI is illustrative only** |
 | Operational validation engine or ML services | **Planned; not implemented** |
@@ -156,6 +157,19 @@ Several shared components exist in the source but are not referenced by any rout
 | Live AI, external API, email, WhatsApp, payment or analytics integration | **Not connected** |
 
 The routes for role screens should not be read as evidence that the underlying workflow exists. Several destinations are intentionally explanatory placeholders.
+
+### Candidate profile and enrollment foundation
+
+The candidate-only API runs from `server/` and uses the Supabase anon key with each candidate's access token; it does not use or require a service-role key. Candidate accounts must be provisioned in Supabase Auth with trusted `app_metadata.role = "student"` before sign-in. The student API rejects other roles, stores the access and refresh tokens in `HttpOnly`, `SameSite=Strict` cookies, checks request origins for state-changing operations, and limits sign-in attempts.
+
+The additive migration in `supabase/migrations/202610260001_student_portal.sql` creates:
+
+- `student_profiles`, keyed by the Supabase Auth user ID. The candidate may update only display name and phone; email comes from Auth and is read-only.
+- `student_enrollments`, a read-only-to-candidate record view with reference, program, institution, submission time, status and optional deadline. RLS allows a candidate to read only records whose `student_id` equals their Auth ID. No candidate-facing enrollment write or confirmation endpoint is provided.
+
+The migration must be applied to the intended Supabase project before data requests can succeed. This repository contains no institution enrollment submission workflow, so enrollment pages show an honest empty state until an authorized institution workflow adds records. Requirements and outstanding actions are not modeled and are not fabricated. These endpoints do not authenticate or authorize the AICTE/College demo pages.
+
+Profile validation runs both in the form and API. The API rejects extra/protected fields and derives the user ID from the validated Auth session, never from request input. The focused API tests use an injected Supabase test double; they verify validation, sign-in cookies, role gating, profile writes and enrollment ownership, but do not replace a live Supabase integration test.
 
 ## 7. Technology Stack
 
@@ -165,18 +179,20 @@ The routes for role screens should not be read as evidence that the underlying w
 |---|---|
 | Frontend | React 19 and React DOM, written in TypeScript and built with Vite 6. |
 | Routing | React Router DOM 7. |
+| Candidate API | Node.js + Express 5 under `server/`; Supabase JS client for Auth and user-scoped PostgREST requests. |
+| Candidate persistence | Supabase Auth plus the additive SQL migration under `supabase/migrations/`; no service-role credential is used. |
 | UI icons | Lucide React. |
 | Fonts | Locally bundled Public Sans and IBM Plex Mono through Fontsource packages, plus Instrument Serif for the landing page's display headings. |
 | Package manager | pnpm, pinned in `package.json` as `pnpm@11.25.0`, with a committed lockfile. |
 | Styling | Hand-written CSS using custom properties: the global design system in `src/styles.css`, the landing page in `src/landing.css`, and the small upstream stylesheets that ship with the React Bits components. Tailwind, a component library, CSS-in-JS and any additional UI framework are not used. |
 | Deployment | Static Vite build, currently served at `https://sudharshan-mauve.vercel.app`. No deployment configuration is committed in this repository; see [Local Development](#21-local-development). |
 
-### Intended future architecture
+### Further planned architecture
 
 | Layer | Intended technology | Status |
 |---|---|---|
-| Backend | Node.js + Express | Planned; no backend service exists in the repository. |
-| Database | Supabase | Planned; no project schema or database connection exists here. |
+| Backend | Node.js + Express | Candidate endpoints implemented; other roles/workflows remain planned. |
+| Database | Supabase | Candidate schema migration supplied; live project configuration and migration application remain external setup. |
 | Machine learning | Python services/models where needed | Planned; no ML code exists here. |
 | AI and external APIs | Called by backend services | Planned; no provider integration is connected. |
 
@@ -194,21 +210,21 @@ The landing markup stays agnostic to which component draws the word. Its own mot
 
 ## 8. High-Level Architecture
 
-### Current prototype
+### Current application
 
 ```text
 Browser
   ↓
 React + TypeScript single-page interface (Vite)
-  ↓
-Role shells, pages and shared components
-  ↓
-Synthetic fixtures in src/data/demo.ts
-
-No backend, database, APAAR service or external API is called.
+  ├── Existing demo role shells and fixtures in src/data/demo.ts
+  └── same-origin /api/student/*
+        ↓
+      Node.js + Express candidate API
+        ├── Supabase Auth (candidate sessions)
+        └── user-scoped Supabase queries (profile and enrollment)
 ```
 
-`src/services/api.ts` defines a future same-origin `/api` service boundary and TypeScript request/response types. It deliberately makes no network or database requests, and no component imports it yet; pages read the synthetic fixtures directly.
+Only candidate profile and enrollment pages use the new API. The dashboard and other role screens remain demo UI. The API uses Supabase Auth and the anon key with the candidate JWT; row-level security is the database boundary. No APAAR service or other external integration is called.
 
 ### Intended future system
 
@@ -227,12 +243,16 @@ Privileged external services must not be called directly from browser code. The 
 
 ## 9. Future Data Model
 
-The following are conceptual entities from the project scope, not implemented tables or a finalized schema:
+Most entities remain conceptual and are not implemented tables. The current additive migration creates only the candidate profile and enrollment tables, linked to Supabase Auth IDs:
+
+- `student_profiles`
+- `student_enrollments`
+
+No institution submission workflow is present; no enrollment write endpoint is added.
 
 - `institutions`
 - `seat_config`
 - `students`
-- `enrolments`
 - `submission_batches`
 - `validation_issues`
 - `review_cases`
@@ -242,11 +262,17 @@ The following are conceptual entities from the project scope, not implemented ta
 - `audit_log`
 - `users`
 
-The exact database schema, relationships, retention rules and authorization model must be finalized before production implementation. No database fields are specified by this README. Sensitive student fields must be appropriately protected, access-controlled and minimized; do not infer that the UI examples establish a schema.
+The remaining database schema, relationships, retention rules and authorization model must be finalized before production implementation. The migration's profile fields are intentionally limited to candidate-editable display name and phone. Email remains in Supabase Auth; institution-verified identifiers are not editable through this API.
 
 ## 10. Future API Architecture
 
-The following are **conceptual API categories**, not implemented endpoints. Exact paths, payloads, response schemas, permissions, error formats and versioning rules remain to be designed.
+The candidate profile and enrollment endpoints below are implemented as a narrow foundation; all other categories remain conceptual:
+
+- `GET/POST/DELETE /api/student/session` — candidate sign-in, session lookup and sign-out. Accounts must be provisioned outside this portal with trusted `app_metadata.role = "student"`.
+- `GET/PATCH /api/student/profile` — read and update only the authenticated candidate's display name and phone.
+- `GET /api/student/enrollments` — return the authenticated candidate's read-only enrollment rows, newest first.
+
+The following API categories are not implemented; exact paths, payloads, permissions and response schemas remain to be designed:
 
 - Authentication and OTP verification
 - Seat configuration
@@ -258,7 +284,7 @@ The following are **conceptual API categories**, not implemented endpoints. Exac
 - Consent management
 - Authorized verification
 
-The current `src/services/api.ts` file contains only a typed interface boundary. No API route, server controller, request persistence or live response exists. Do not invent endpoints in frontend components or present these categories as callable services.
+`src/services/api.ts` is the same-origin HTTP client used by the candidate pages. The enrollment endpoint has no producer in this repository; records appear only after an authorized institutional integration populates the table.
 
 ## 11. Validation and ML Roadmap
 
@@ -372,7 +398,7 @@ Roadmap order is an intended progression and may change after design and securit
 | Phase | Intended outcome | Status |
 |---|---|---|
 | 1 | UI foundation and navigation | **Implemented as a prototype UI foundation only.** |
-| 2 | Supabase schema and Node.js + Express API foundation | Planned |
+| 2 | Supabase schema and Node.js + Express API foundation | Candidate profile/enrollment foundation added; live project setup required |
 | 3 | College student data intake | Planned |
 | 4 | Validation engine | Planned |
 | 5 | Student confirmation and consent | Planned |
@@ -429,6 +455,7 @@ Completing a roadmap item requires implementing and verifying its real behavior;
 │   │   └── WebThreads.jsx
 │   ├── services/
 │   │   └── api.ts
+│   ├── student-portal.tsx
 │   ├── app.tsx
 │   ├── components.tsx
 │   ├── landing.css
@@ -438,6 +465,14 @@ Completing a roadmap item requires implementing and verifying its real behavior;
 │   ├── pages.tsx
 │   ├── styles.css
 │   └── types.ts
+├── server/
+│   ├── index.mjs
+│   ├── student-api.mjs
+│   └── student-api.test.mjs
+├── supabase/
+│   └── migrations/
+│       └── 202610260001_student_portal.sql
+├── .env.example
 ├── docs/
 │   └── PROJECT_AUDIT.md
 ├── .gitignore
@@ -466,13 +501,16 @@ Responsibilities in the current frontend:
 - `src/pages.tsx` contains public pages, role dashboards and placeholder views.
 - `src/components.tsx` contains shared visual and form components.
 - `src/data/demo.ts` contains role navigation, route descriptions and synthetic demonstration fixtures.
-- `src/services/api.ts` defines a future API boundary only; it makes no requests.
+- `src/services/api.ts` is the same-origin typed HTTP client used by candidate profile and enrollment pages.
+- `src/student-portal.tsx` contains candidate sign-in, profile editing and read-only enrollment pages.
+- `server/` contains the candidate session/profile/enrollment API, cookie handling, validation and focused API tests.
+- `supabase/migrations/` contains the additive candidate tables and row-level security policies.
 - `src/types.ts` contains shared TypeScript interfaces and unions.
 - `src/styles.css` contains the shared design tokens and the styling for public pages and role interfaces.
 - `public/manus-routes.json` declares the website page routes.
 - `docs/PROJECT_AUDIT.md` contains the deeper technical audit: route inventory, data flow, security, accessibility, responsive and performance findings, technical debt and the recommended phase order.
 
-There are currently no `backend/`, `server/`, `api/`, `ml/`, `supabase/`, `tests/` or `.github/` directories. A future separation into backend and ML services may be designed when those layers are approved; do not create duplicate or speculative structures before then.
+There are currently no separate AICTE/College, intake, confirmation, ML or institution API services. The `server/` and `supabase/migrations/` directories contain only the narrow candidate account/profile/enrollment foundation described above.
 
 ## 21. Local Development
 
@@ -487,7 +525,9 @@ pnpm install
 pnpm dev
 ```
 
-The Vite development server is configured to listen on `0.0.0.0:3000` with strict port binding. Open the local preview address reported by Vite.
+Copy `.env.example` to `.env`, fill in `SUPABASE_URL` and `SUPABASE_ANON_KEY` from the intended Supabase project, and apply the SQL migration there. Provision candidate accounts through a trusted Supabase Auth administration path and assign `app_metadata.role = "student"`; never let a client assign this role. Then run `pnpm dev:api` in a second terminal alongside `pnpm dev`. The Vite server proxies `/api` to the Express service on port 4000. `APP_ORIGIN` must exactly match the browser origin (default `http://localhost:3000`); the API binds to `API_HOST` (default `0.0.0.0`).
+
+If Supabase is not configured, the API reports that candidate data is unavailable; it does not fall back to synthetic data.
 
 ### Build and preview
 
@@ -496,7 +536,7 @@ pnpm run build
 pnpm preview
 ```
 
-`pnpm run build` runs the TypeScript project build and creates the Vite production bundle in `dist/`. `pnpm preview` serves that built frontend locally. The repository currently has no backend or ML service commands; do not invent commands for services that are not present.
+`pnpm run build` runs the TypeScript project build and creates the Vite production bundle in `dist/`. `pnpm preview` serves that built frontend locally. `pnpm test` runs the focused Node API tests. `pnpm start:api` starts the API for a deployment environment; production routing, HTTPS, trusted proxy configuration, and the SPA/API origin arrangement must be configured by the deployment platform.
 
 ### Deployment
 
@@ -506,23 +546,24 @@ The repository does **not** contain deployment configuration (`vercel.json`, a C
 
 ## 22. Environment Variables
 
-The current frontend declares no application environment variables and needs none to run: the UI requires no backend credentials. Tooling configured in `components.json` reads one build-time variable, `REACTBITS_LICENSE_KEY`, for the licensed React Bits Pro registry. Supply it through the environment (for example `.env.local`, which is git-ignored), never through source code or a `VITE_`-prefixed name.
+The candidate API reads `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `APP_ORIGIN`, `API_PORT` and optionally `API_HOST` from the server environment. An example is provided in `.env.example`; do not prefix server credentials with `VITE_`. The Supabase anon key is used server-side with the candidate's JWT and RLS; never configure or expose the Supabase service-role key. Tooling configured in `components.json` also reads `REACTBITS_LICENSE_KEY` for the licensed React Bits Pro registry.
 
-Future environment configuration may need categories for client-safe public settings and backend-only database access, privileged Supabase credentials, AI providers and external APIs. Exact variable names should be chosen and documented when those services are implemented; this README does not introduce names that are not already part of the codebase.
+Other future services may need additional server-only environment settings. No AI provider, service-role key or external integration secret is used by the candidate API.
 
 Never place secrets in Vite-exposed frontend variables or browser code. Keep `.env` and secret-bearing environment files out of Git; `.gitignore` currently ignores `.env` and `.env.*` and permits a future `.env.example`.
 
 ## 23. Testing
 
-There is currently no automated unit, component, integration, API, database, validation, ML, authorization/RBAC, security, accessibility or end-to-end test suite, and no test script is declared in `package.json`.
+The repository has a focused Node test suite for candidate API validation, authentication gating, profile persistence/field restrictions, enrollment ownership/multiple rows, request-origin checks and session-cookie attributes. It does not have a browser end-to-end suite, a live Supabase integration test, or broad coverage of the remaining role workflows.
 
 The existing verification command is:
 
 ```bash
 pnpm run build
+pnpm test
 ```
 
-It runs the TypeScript build and Vite production build. It is a compile/build check, not a substitute for behavioral tests or an accessibility, security or responsive audit. No CI workflow runs it automatically; there is no lint or separate typecheck script, and no test script.
+The build runs the TypeScript and Vite production build. The Node tests exercise API handlers with a test double, not an actual Supabase project. These commands are not substitutes for a live RLS/database integration, security review, browser test, accessibility or responsive audit. No CI workflow runs them automatically; there is no lint script.
 
 Future testing should cover:
 
@@ -541,12 +582,13 @@ Only mark a test layer as implemented after test code and evidence exist in the 
 
 The project is a UI prototype for SIH 2026. Synthetic student references and simulated role navigation may be used to explain the concept. Dashboard events and workflow states are examples, not live records or official decisions.
 
-The current repository does **not** implement mock OTP, a mock APAAR service, mock API responses or a connected demo backend. Role access is simulated by navigation; there is no production authentication. If mock services are introduced later, label them clearly as prototype/demo behavior and never represent them as live government integrations.
+The current repository does **not** implement mock OTP, a mock APAAR service, mock API responses or a connected demo backend. Candidate profile/enrollment requests use Supabase Auth when configured; the public role selector and AICTE/College shell access remain demonstration navigation without production authentication. If mock services are introduced later, label them clearly as prototype/demo behavior and never represent them as live government integrations.
 
 ## 25. Known Limitations
 
-- No production authentication, OTP, account recovery or server-enforced role authorization.
-- No Node.js + Express backend or Supabase database connection.
+- Candidate sign-in/profile/enrollment endpoints require configured Supabase Auth and the provided migration to be applied. OTP, account recovery and authentication for other roles are not implemented.
+- The candidate enrollment table has no institution submission workflow in this repository and remains empty until populated by an authorized integration.
+- Production API hosting, same-origin routing, TLS/proxy configuration and deployment environment are not configured here.
 - No live APAAR or Aadhaar integration; no real identifiers should be entered.
 - No operational student intake, bulk upload, submission or confirmation workflow.
 - No connected validation engine, cross-institution matching, risk scoring or ML model.
@@ -554,7 +596,7 @@ The current repository does **not** implement mock OTP, a mock APAAR service, mo
 - No official AICTE data, institution feed, report generation or production decision.
 - QR/credential pages are placeholders and do not issue or verify credentials.
 - Legal, privacy and security content is draft/intended-principle material and has not had formal review.
-- Automated verification is limited to the configured TypeScript/Vite build; a product test suite is not present.
+- Automated verification includes the TypeScript/Vite build and focused mocked API tests; live Supabase, browser E2E and broad product tests are not present.
 - The deployed site returns HTTP 404 on direct loads of deep links, because no SPA rewrite is versioned in the repository.
 - The student shell has no sidebar link to `/student`; that overview is reachable only through the role picker, the breadcrumb or direct navigation.
 - On `/college/students/add`, two sidebar items highlight at once because the active-link test also matches parent paths.
